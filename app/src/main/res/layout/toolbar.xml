@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/blue">
+
+        <ImageView
+            android:id="@+id/layalogo"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:src="@drawable/layalogo"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:src="@drawable/ph" />
+
+</androidx.appcompat.widget.Toolbar>
