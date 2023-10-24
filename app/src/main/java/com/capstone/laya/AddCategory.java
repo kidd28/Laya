@@ -133,7 +133,7 @@ public class AddCategory extends AppCompatActivity {
                                     while (!uriTask.isSuccessful());
                                     if(uriTask.isSuccessful()){
                                         String downloadUri = uriTask.getResult().toString();
-                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
                                         HashMap<String, Object> hashMap = new HashMap<>();
                                         hashMap.put("Category", categoryName);
                                         hashMap.put("ImageLink", downloadUri);
