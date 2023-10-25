@@ -87,7 +87,7 @@ public class AddAudio extends AppCompatActivity {
         uploadAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String option[] = {"Select Audio", "Record Audio"};
+                String option[] = {"Select Audio", "Record Audio", "Text To Speech"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddAudio.this);
                 builder.setTitle("Choose Action");
                 builder.setItems(option, new DialogInterface.OnClickListener() {
@@ -98,6 +98,9 @@ public class AddAudio extends AppCompatActivity {
                                  checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
                                  break;
                              case 1:
+                                 Toast.makeText(AddAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
+                                 break;
+                             case 2:
                                  Toast.makeText(AddAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
                                  break;
                          }
