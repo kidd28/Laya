@@ -1,16 +1,25 @@
 package com.capstone.laya.Model;
 
 public class AudioModel {
-    String Name,FilePath,FileName,FileLink, ImageLink;
+    String Name,FilePath,FileName,FileLink, ImageLink,Category;
 
     public AudioModel(){}
 
-    public AudioModel(String Name, String FilePath, String FileName, String FileLink,String ImageLink){
+    public AudioModel(String Name, String FilePath, String FileName, String FileLink,String ImageLink,String Category){
         this.Name = Name;
         this.FilePath = FilePath;
         this.FileName = FileName;
         this.FileLink = FileLink;
         this.ImageLink = ImageLink;
+        this.Category = Category;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 
     public String getImageLink() {

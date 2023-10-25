@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class AddAudio extends AppCompatActivity {
     TextView audioname;
     FirebaseStorage storage;
     StorageReference storageReference;
+    EditText name;
 
     FirebaseUser user;
 
@@ -75,11 +77,11 @@ public class AddAudio extends AppCompatActivity {
         upload = findViewById(R.id.upload);
         AudioImage = findViewById(R.id.CatgoryImage);
         audioname = findViewById(R.id.audioname);
-
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
+        name = findViewById(R.id.Name);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        storage = FirebaseStorage.getInstance();
+
+        storageReference = storage.getReference().child("Audio Added by User").child(user.getUid());
 
         category = getIntent().getExtras().getString("Category");
         uploadAudio.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +121,7 @@ public class AddAudio extends AppCompatActivity {
             }
         });
     }
+
     private void SelectImage() {
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
@@ -171,7 +174,7 @@ public class AddAudio extends AppCompatActivity {
         progressDialog.setTitle("Uploading Audio...");
         progressDialog.show();
             String filePathAndName = category+"/"+filename+"_"+AudioId;
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+            StorageReference ref = storageReference.child(filePathAndName);
             ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -182,12 +185,11 @@ public class AddAudio extends AppCompatActivity {
                         Toast.makeText(AddAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("Name", filename);
+                        hashMap.put("Name", name.getText());
                         hashMap.put("Category", category);
-                        hashMap.put("FilePath", filePathAndName);
-                        hashMap.put("FileName", filename + "_" + AudioId);
+                        hashMap.put("FileName", filename + ".mp3");
                         hashMap.put("FileLink", downloadUri);
-                        reference.child(filename).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
                                 uploadImage(category,filename);
@@ -262,7 +264,7 @@ public class AddAudio extends AppCompatActivity {
                                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
                                         HashMap<String, Object> hashMap = new HashMap<>();
                                         hashMap.put("ImageLink", downloadUri);
-                                        reference.child(filename).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);

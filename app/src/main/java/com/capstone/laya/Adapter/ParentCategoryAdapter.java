@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.capstone.laya.Model.AudioModel;
 import com.capstone.laya.Model.CategoriesModel;
 import com.capstone.laya.ParentAccessAudio;
+import com.capstone.laya.ParentalAccess;
 import com.capstone.laya.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +38,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +105,6 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                         //OR
                                         String NewCategory = YouEditTextValue.getText().toString();
                                         updateCategoryName(NewCategory, category,img);
-
                                     }
                                 });
                                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -112,14 +115,76 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                 alert.show();
                                 break;
                             case R.id.delete:
-
-                                break;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setMessage("Do you want to delete this Category?");
+                                builder.setTitle("Delete Category");
+                                builder.setCancelable(false);
+                                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                    deleteCategory(category, img);
+                                });
+                                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                    dialog.cancel();
+                                });
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                        break;
                         }
                         return true;
                     }
                 });
                 p.show();
                 return true;
+            }
+        });
+    }
+
+    private void deleteCategory(String category, String img) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(img);
+        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid()).child(category);
+                reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot snap : snapshot.getChildren()){
+                                    if (Objects.equals(snap.child("Category").getValue(), category)) {
+                                        for(DataSnapshot snp :snap.getChildren()){
+                                            DatabaseReference ref1 = snp.getRef();
+                                            ref1.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    context.startActivity(new Intent(context, ParentalAccess.class));
+                                                    ((Activity)context).finish();
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
+                    }
+                });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Log.e("firebasestorage", "onFailure: did not delete file");
             }
         });
     }

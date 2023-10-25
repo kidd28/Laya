@@ -61,8 +61,9 @@ public class AddCategory extends AppCompatActivity {
 
 
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        storageReference = storage.getReference().child("Category Added by user").child(user.getUid());
 
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
