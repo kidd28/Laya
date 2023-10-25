@@ -185,7 +185,7 @@ public class AddAudio extends AppCompatActivity {
                         Toast.makeText(AddAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("Name", name.getText());
+                        hashMap.put("Name", name.getText().toString());
                         hashMap.put("Category", category);
                         hashMap.put("FileName", filename + ".mp3");
                         hashMap.put("FileLink", downloadUri);
