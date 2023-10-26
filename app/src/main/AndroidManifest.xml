@@ -24,6 +24,9 @@
         android:theme="@style/Theme.Laya"
         tools:targetApi="31">
         <activity
+            android:name=".EditCategory"
+            android:exported="false" />
+        <activity
             android:name=".EditAudio"
             android:exported="false" />
         <activity
@@ -59,7 +62,7 @@
             android:exported="true" />
         <activity
             android:name=".ParentalAccess"
-            android:exported="true" />
+             android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

@@ -26,13 +26,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ParentAccessAudio extends AppCompatActivity {
-    ImageView back,add;
+    ImageView back, add;
     TextView tv;
     RecyclerView rv;
     ParentAuidoAdapter adapter;
     ArrayList<AudioModel> audioModels;
     String category;
     FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,23 +72,24 @@ public class ParentAccessAudio extends AppCompatActivity {
     }
 
     private void loadAudioAddedbyUser() {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot snap : snapshot.getChildren()){
-                        if (Objects.equals(snap.child("Category").getValue(), category)) {
-                            AudioModel model = snap.getValue(AudioModel.class);
-                            audioModels.add(model);
-                        }
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    if (Objects.equals(snap.child("Category").getValue(), category)) {
+                        AudioModel model = snap.getValue(AudioModel.class);
+                        audioModels.add(model);
                     }
-                    adapter = new ParentAuidoAdapter(ParentAccessAudio.this, audioModels);
-                    rv.setAdapter(adapter);
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+                adapter = new ParentAuidoAdapter(ParentAccessAudio.this, audioModels);
+                rv.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     private void loadAudio() {
@@ -95,10 +97,10 @@ public class ParentAccessAudio extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     if (Objects.equals(snap.child("Category").getValue(), category)) {
                         for (DataSnapshot s : snap.getChildren()) {
-                            if(!s.getKey().equals("Category")&&!s.getKey().equals("ImageLink")){
+                            if (!s.getKey().equals("Category") && !s.getKey().equals("ImageLink")) {
                                 AudioModel model = s.getValue(AudioModel.class);
                                 audioModels.add(model);
                             }
@@ -106,9 +108,10 @@ public class ParentAccessAudio extends AppCompatActivity {
                         }
                     }
                 }
-                 adapter = new ParentAuidoAdapter(ParentAccessAudio.this, audioModels);
+                adapter = new ParentAuidoAdapter(ParentAccessAudio.this, audioModels);
                 rv.setAdapter(adapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -118,7 +121,7 @@ public class ParentAccessAudio extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ParentAccessAudio.this,ParentalAccess.class);
+        Intent i = new Intent(ParentAccessAudio.this, ParentalAccess.class);
         i.putExtra("Category", category);
         startActivity(i);
         finish();

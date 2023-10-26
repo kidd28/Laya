@@ -43,13 +43,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class ParentalAccess extends AppCompatActivity {
-    ImageView back,add;
+    ImageView back, add;
     RecyclerView rv;
     ParentCategoryAdapter adapter;
     ArrayList<CategoriesModel> categoriesModels;
 
 
     FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +91,7 @@ public class ParentalAccess extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     CategoriesModel model = snap.getValue(CategoriesModel.class);
                     categoriesModels.add(model);
                 }
@@ -98,6 +99,7 @@ public class ParentalAccess extends AppCompatActivity {
                 rv.setAdapter(categoriesAdapter);
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -111,7 +113,7 @@ public class ParentalAccess extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     CategoriesModel model = snap.getValue(CategoriesModel.class);
                     categoriesModels.add(model);
                 }
@@ -119,6 +121,7 @@ public class ParentalAccess extends AppCompatActivity {
                 rv.setAdapter(categoriesAdapter);
                 loadCategoriesAddedbyUser();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -129,7 +132,7 @@ public class ParentalAccess extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(ParentalAccess.this,Dashboard.class));
+        startActivity(new Intent(ParentalAccess.this, Dashboard.class));
         finish();
     }
 }

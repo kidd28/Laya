@@ -82,12 +82,12 @@ public class CategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v= inflater.inflate(R.layout.fragment_category, container, false);
+        View v = inflater.inflate(R.layout.fragment_category, container, false);
         // Inflate the layout for this fragment
         rv = v.findViewById(R.id.rv);
 
         categoriesModels = new ArrayList<>();
-        GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         rv.setLayoutManager(layoutManager);
@@ -95,18 +95,20 @@ public class CategoryFragment extends Fragment {
 
         return v;
     }
+
     private void loadCategoriesAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     CategoriesModel model = snap.getValue(CategoriesModel.class);
                     categoriesModels.add(model);
                 }
                 CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
                 rv.setAdapter(categoriesAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -120,7 +122,7 @@ public class CategoryFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     CategoriesModel model = snap.getValue(CategoriesModel.class);
                     categoriesModels.add(model);
                 }
@@ -128,6 +130,7 @@ public class CategoryFragment extends Fragment {
                 rv.setAdapter(categoriesAdapter);
                 loadCategoriesAddedbyUser();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

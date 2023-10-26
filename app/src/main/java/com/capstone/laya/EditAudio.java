@@ -63,9 +63,10 @@ public class EditAudio extends AppCompatActivity {
     String fname;
     private Uri imagefilePath;
 
-    String Name,Category,FilePath,FileName,FileLink,ImageLink;
+    String Name, Category, FilePath, FileName, FileLink, ImageLink;
 
-    boolean upImg,upAudio;
+    boolean upImg, upAudio;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,7 @@ public class EditAudio extends AppCompatActivity {
                 builder.setItems(option, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
+                        switch (i) {
                             case 0:
                                 checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
                                 break;
@@ -133,9 +134,9 @@ public class EditAudio extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(name.getText().toString().equals(Name)){
+                if (name.getText().toString().equals(Name)) {
                     Save();
-                }else {
+                } else {
                     SaveNew();
                 }
             }
@@ -145,7 +146,7 @@ public class EditAudio extends AppCompatActivity {
     private void SaveNew() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("Name",name.getText().toString());
+        hashMap.put("Name", name.getText().toString());
         hashMap.put("Category", Category);
         hashMap.put("FilePath", FilePath);
         hashMap.put("FileName", FileName);
@@ -164,7 +165,7 @@ public class EditAudio extends AppCompatActivity {
     private void Save() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("Name",Name);
+        hashMap.put("Name", Name);
         hashMap.put("Category", Category);
         hashMap.put("FilePath", FilePath);
         hashMap.put("FileName", FileName);
@@ -188,35 +189,31 @@ public class EditAudio extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
     }
-    public void checkPermission(String permission, int requestCode)
-    {
+
+    public void checkPermission(String permission, int requestCode) {
         // Checking if permission is not granted
         if (ContextCompat.checkSelfPermission(EditAudio.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(EditAudio.this, new String[] { permission }, requestCode);
-        }
-        else {
+            ActivityCompat.requestPermissions(EditAudio.this, new String[]{permission}, requestCode);
+        } else {
             pickAudio();
         }
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(EditAudio.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
                 pickAudio();
-            }
-            else {
+            } else {
                 Toast.makeText(EditAudio.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
     private void pickAudio() {
-        Intent pickAudioIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Intent pickAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
     }
 
@@ -226,20 +223,20 @@ public class EditAudio extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_PICK_AUDIO:
                 if (RESULT_OK == resultCode) {
-                    if(data!=null){
+                    if (data != null) {
                         audioUri = data.getData();
-                        try{
+                        try {
                             //call the getPath uri with context and uri
                             //To get path from uri
                             String path = getPath(this, audioUri);
                             File file = new File(path);
                             fname = file.getName();
                             fname = fname.replaceAll("\\..*", "");
-                            audioname.setText(fname+".mp3");
+                            audioname.setText(fname + ".mp3");
                             FileName = fname;
                             uploadAudio(audioUri, fname);
-                        }catch(Exception e){
-                            e("Err", e.toString()+"");
+                        } catch (Exception e) {
+                            e("Err", e.toString() + "");
                         }
                     }
                 }
@@ -261,19 +258,20 @@ public class EditAudio extends AppCompatActivity {
                 break;
         }
     }
-    public void uploadAudio(Uri audioUri, String filename){
+
+    public void uploadAudio(Uri audioUri, String filename) {
         String AudioId = String.valueOf(System.currentTimeMillis());
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading Audio...");
         progressDialog.show();
-        String filePathAndName = Category+"/"+filename+"_"+AudioId;
+        String filePathAndName = Category + "/" + filename + "_" + AudioId;
         StorageReference ref = storageReference.child(filePathAndName);
         ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uriTask.isSuccessful()) ;
-                if(uriTask.isSuccessful()) {
+                if (uriTask.isSuccessful()) {
                     String downloadUri = uriTask.getResult().toString();
                     FileLink = downloadUri;
                     progressDialog.dismiss();
@@ -284,21 +282,20 @@ public class EditAudio extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
             }
-        }).addOnProgressListener(
-                new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    // Progress Listener for loading
-                    // percentage on the dialog box
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress
-                                = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                    }
-                });
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            // Progress Listener for loading
+            // percentage on the dialog box
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                progressDialog.setMessage("Uploaded " + (int) progress + "%");
+            }
+        });
     }
-    public  String getPath(Context context, Uri uri) throws URISyntaxException {
+
+    public String getPath(Context context, Uri uri) throws URISyntaxException {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { "_data" };
+            String[] projection = {"_data"};
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, null, null, null);
@@ -309,13 +306,13 @@ public class EditAudio extends AppCompatActivity {
             } catch (Exception e) {
                 // Eat it
             }
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
 
         return null;
     }
+
     private void uploadImage(String categoryName) {
         if (imagefilePath != null) {
             // Code for showing progressDialog while uploading
@@ -323,26 +320,24 @@ public class EditAudio extends AppCompatActivity {
             progressDialog.setTitle("Uploading Image...");
             progressDialog.show();
             // Defining the child of storageReference
-            StorageReference ref = storageReference.child(categoryName+"_"+"Audio_Images/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(categoryName + "_" + "Audio_Images/" + UUID.randomUUID().toString());
             // adding listeners on upload
             // or failure of image
-            ref.putFile(imagefilePath)
-                    .addOnSuccessListener(
-                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
-                                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                    while (!uriTask.isSuccessful());
-                                    if(uriTask.isSuccessful()){
-                                        String ImagedownloadUri = uriTask.getResult().toString();
-                                        ImageLink =ImagedownloadUri;
-                                        progressDialog.dismiss();
-                                        Toast.makeText(EditAudio.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            })
+            ref.putFile(imagefilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // Image uploaded successfully
+                            // Dismiss dialog
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!uriTask.isSuccessful()) ;
+                            if (uriTask.isSuccessful()) {
+                                String ImagedownloadUri = uriTask.getResult().toString();
+                                ImageLink = ImagedownloadUri;
+                                progressDialog.dismiss();
+                                Toast.makeText(EditAudio.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
 
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -351,18 +346,15 @@ public class EditAudio extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(EditAudio.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .addOnProgressListener(
-                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                // Progress Listener for loading
-                                // percentage on the dialog box
-                                @Override
-                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress
-                                            = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                                }
-                            });
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        // Progress Listener for loading
+                        // percentage on the dialog box
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                        }
+                    });
         }
     }
 }

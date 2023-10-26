@@ -29,7 +29,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     Context context;
     ArrayList<CategoriesModel> categoriesModels;
 
-    public CategoriesAdapter(Context context, ArrayList<CategoriesModel> model){
+    public CategoriesAdapter(Context context, ArrayList<CategoriesModel> model) {
         this.context = context;
         this.categoriesModels = model;
     }
@@ -56,10 +56,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
                 Bundle bundle = new Bundle();
                 FragmentTransaction fragmentTransaction = ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction();
                 System.out.println(category);
-                bundle.putString("Category",category); // use as per your need
+                bundle.putString("Category", category); // use as per your need
                 fragment.setArguments(bundle);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.fragmentView,fragment);
+                fragmentTransaction.replace(R.id.fragmentView, fragment);
                 fragmentTransaction.commit();
             }
         });
@@ -75,6 +75,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
         ImageView img;
         TextView text;
         CardView card;
+
         public HolderAdapter(@NonNull View itemView) {
             super(itemView);
 

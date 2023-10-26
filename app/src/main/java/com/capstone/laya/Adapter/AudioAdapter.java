@@ -26,9 +26,9 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
     Context context;
     ArrayList<AudioModel> audioModels;
 
-    public AudioAdapter(Context context, ArrayList<AudioModel> audioModels){
-    this.context = context;
-    this.audioModels = audioModels;
+    public AudioAdapter(Context context, ArrayList<AudioModel> audioModels) {
+        this.context = context;
+        this.audioModels = audioModels;
     }
 
     @NonNull
@@ -42,7 +42,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
     @Override
     public void onBindViewHolder(@NonNull AudioAdapter.HolderAdapter holder, int position) {
         AudioModel model = audioModels.get(position);
-        String name= model.getName();
+        String name = model.getName();
         String img = model.getImageLink();
 
         holder.text.setText(name);
@@ -65,6 +65,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
         ImageView img;
         TextView text;
         CardView card;
+
         public HolderAdapter(@NonNull View itemView) {
             super(itemView);
 
@@ -73,6 +74,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
             card = itemView.findViewById(R.id.card);
         }
     }
+
     private void playAudio(String audioUrl) {
         // initializing media player
         MediaPlayer mediaPlayer = new MediaPlayer();
@@ -92,6 +94,6 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
             // below line is use to display a toast message.
         } catch (IOException e) {
             // this line of code is use to handle error while playing our audio file.
-     }
+        }
     }
 }

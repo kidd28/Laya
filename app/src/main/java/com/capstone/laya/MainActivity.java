@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInAccount account;
     GoogleSignInClient mGoogleSignInClient;
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                 progressDialog.show(); // Display Progress Dialog
                                 user = FirebaseAuth.getInstance().getCurrentUser();
                                 Intent i = new Intent(MainActivity.this, Dashboard.class);
-                                i.putExtra("Welcome","Welcome!");
+                                i.putExtra("Welcome", "Welcome!");
                                 startActivity(i);
                                 MainActivity.this.finish();
                             }
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.cancel();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
             MainActivity.this.finish();
-        }else {
+        } else {
             progressDialog.cancel();
         }
     }

@@ -90,18 +90,17 @@ public class AudioFragment extends Fragment {
         cat = v.findViewById(R.id.cat);
 
 
-
         audioModels = new ArrayList<>();
-        GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
         rv.setLayoutManager(layoutManager);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         Bundle bundle = this.getArguments();
 
-        if(bundle != null){
+        if (bundle != null) {
             category = bundle.getString("Category");
-           // System.out.println(category);
+            // System.out.println(category);
             cat.setText(category);
         }
 
@@ -109,12 +108,13 @@ public class AudioFragment extends Fragment {
         loadAudioAddedbyUser();
         return v;
     }
+
     private void loadAudioAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     if (Objects.equals(snap.child("Category").getValue(), category)) {
                         AudioModel model = snap.getValue(AudioModel.class);
                         audioModels.add(model);
@@ -123,20 +123,22 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
+
     private void loadAudio() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     if (Objects.equals(snap.child("Category").getValue(), category)) {
                         for (DataSnapshot s : snap.getChildren()) {
-                            if(!s.getKey().equals("Category")&&!s.getKey().equals("ImageLink")){
+                            if (!s.getKey().equals("Category") && !s.getKey().equals("ImageLink")) {
                                 AudioModel model = s.getValue(AudioModel.class);
                                 audioModels.add(model);
                             }
@@ -147,6 +149,7 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

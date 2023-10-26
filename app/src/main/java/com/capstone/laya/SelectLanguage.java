@@ -19,11 +19,12 @@ import java.util.HashMap;
 
 public class SelectLanguage extends AppCompatActivity {
 
-    Button fil,eng;
+    Button fil, eng;
     FirebaseDatabase database;
     FirebaseAuth mAuth;
     FirebaseUser user;
     DatabaseReference reference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

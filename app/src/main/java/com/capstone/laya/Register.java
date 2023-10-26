@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class Register extends AppCompatActivity {
-     EditText email;
+    EditText email;
     EditText name;
     EditText dob;
     EditText gender;
@@ -32,7 +32,8 @@ public class Register extends AppCompatActivity {
     FirebaseUser user;
     DatabaseReference reference;
 
-    String Email, Name, Dob, Gender,uid;
+    String Email, Name, Dob, Gender, uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +64,7 @@ public class Register extends AppCompatActivity {
                 Gender = dob.getText().toString().trim();
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("Email",Email );
+                hashMap.put("Email", Email);
                 hashMap.put("Uid", uid);
                 hashMap.put("Name", Name);
                 hashMap.put("DateOfBirth", Dob);
@@ -85,7 +86,6 @@ public class Register extends AppCompatActivity {
                 });
             }
         });
-
 
 
     }

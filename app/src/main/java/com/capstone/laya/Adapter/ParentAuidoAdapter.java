@@ -37,15 +37,16 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter.HolderAdapter>{
+public class ParentAuidoAdapter extends RecyclerView.Adapter<ParentAuidoAdapter.HolderAdapter> {
     Context context;
     ArrayList<AudioModel> audioModels;
     FirebaseUser user;
 
-    public ParentAuidoAdapter(Context context, ArrayList<AudioModel> audioModels){
+    public ParentAuidoAdapter(Context context, ArrayList<AudioModel> audioModels) {
         this.context = context;
         this.audioModels = audioModels;
     }
+
     @NonNull
     @Override
     public ParentAuidoAdapter.HolderAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,7 +57,7 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
     @Override
     public void onBindViewHolder(@NonNull ParentAuidoAdapter.HolderAdapter holder, int position) {
         AudioModel model = audioModels.get(position);
-        String name= model.getName();
+        String name = model.getName();
         String img = model.getImageLink();
         holder.category.setText(name);
         holder.go.setVisibility(View.GONE);
@@ -78,17 +79,17 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         int m = menuItem.getItemId();
-                        switch (m){
+                        switch (m) {
                             case R.id.edit:
                                 Intent intent = new Intent(context, EditAudio.class);
-                                intent.putExtra("Name",model.getName());
-                                intent.putExtra("Category",model.getCategory());
-                                intent.putExtra("FilePath",model.getFilePath());
-                                intent.putExtra("FileName",model.getFileName());
-                                intent.putExtra("FileLink",model.getFileLink());
-                                intent.putExtra("ImageLink",model.getImageLink());
+                                intent.putExtra("Name", model.getName());
+                                intent.putExtra("Category", model.getCategory());
+                                intent.putExtra("FilePath", model.getFilePath());
+                                intent.putExtra("FileName", model.getFileName());
+                                intent.putExtra("FileLink", model.getFileLink());
+                                intent.putExtra("ImageLink", model.getImageLink());
                                 context.startActivity(intent);
-                                ((Activity)context).finish();
+                                ((Activity) context).finish();
 
 
                                 break;
@@ -98,7 +99,7 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
                                 builder.setTitle("Delete Category");
                                 builder.setCancelable(false);
                                 builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                    deleteAudio(model.getFileLink(), model.getImageLink(),model.getName());
+                                    deleteAudio(model.getFileLink(), model.getImageLink(), model.getName());
                                 });
                                 builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
                                     dialog.cancel();
@@ -116,7 +117,7 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
         });
     }
 
-    private void deleteAudio(String fileLink, String imageLink,String Name) {
+    private void deleteAudio(String fileLink, String imageLink, String Name) {
         user = FirebaseAuth.getInstance().getCurrentUser();
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(fileLink);
         storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -129,7 +130,7 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid()).child(Name);
                         reference.removeValue();
                         context.startActivity(new Intent(context, ParentalAccess.class));
-                        ((Activity)context).finish();
+                        ((Activity) context).finish();
                     }
                 });
             }
@@ -141,7 +142,7 @@ public class ParentAuidoAdapter  extends RecyclerView.Adapter<ParentAuidoAdapter
         return audioModels.size();
     }
 
-    public class HolderAdapter extends RecyclerView.ViewHolder{
+    public class HolderAdapter extends RecyclerView.ViewHolder {
         ImageView img, go;
         CardView card;
         TextView category;

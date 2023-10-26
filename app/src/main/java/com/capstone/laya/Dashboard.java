@@ -31,7 +31,6 @@ public class Dashboard extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
 
-
     private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 
@@ -52,31 +51,25 @@ public class Dashboard extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Users");
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(Dashboard.this, gso);
 
-        if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragmentView, CategoryFragment.class,null)
-                    .commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.fragmentView, CategoryFragment.class, null).commit();
         }
 
     }
 
 
     private void revokeAccess() {
-        mGoogleSignInClient.revokeAccess()
-                .addOnCompleteListener(Dashboard.this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    }
-                });
+        mGoogleSignInClient.revokeAccess().addOnCompleteListener(Dashboard.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
     }
+
     //<<<
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,12 +79,12 @@ public class Dashboard extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id =  item.getItemId();
-        if (id == R.id.parental_access){
+        int id = item.getItemId();
+        if (id == R.id.parental_access) {
             startActivity(new Intent(Dashboard.this, ParentalAccess.class));
             finish();
         }
-        if (id == R.id.settings){
+        if (id == R.id.settings) {
             startActivity(new Intent(Dashboard.this, Settings.class));
             finish();
         }

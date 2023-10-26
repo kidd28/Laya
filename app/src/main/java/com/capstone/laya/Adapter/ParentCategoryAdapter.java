@@ -24,6 +24,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.capstone.laya.EditCategory;
 import com.capstone.laya.Model.AudioModel;
 import com.capstone.laya.Model.CategoriesModel;
 import com.capstone.laya.ParentAccessAudio;
@@ -61,7 +62,6 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list, parent, false);
         return new ParentCategoryAdapter.HolderAdapter(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ParentCategoryAdapter.HolderAdapter holder, int position) {
         CategoriesModel categoriesModel = categoriesModels.get(position);
@@ -93,26 +93,10 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                         int m = menuItem.getItemId();
                         switch (m){
                             case R.id.edit:
-                                LayoutInflater inflater = LayoutInflater.from(context);
-                                View dialogview = inflater.inflate(R.layout.dialog, null);
-                                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                                alert.setTitle("Category Name");
-                                alert.setView(dialogview);
-                                alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        //What ever you want to do with the value
-                                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
-                                        //OR
-                                        String NewCategory = YouEditTextValue.getText().toString();
-                                        updateCategoryName(NewCategory, category,img);
-                                    }
-                                });
-                                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        // what ever you want to do with No option.
-                                    }
-                                });
-                                alert.show();
+                                Intent i = new Intent(context, EditCategory.class);
+                                i.putExtra("CategoryName", category);
+                                i.putExtra("ImageLink", img);
+                                context.startActivity(i);
                                 break;
                             case R.id.delete:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -160,7 +144,7 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     context.startActivity(new Intent(context, ParentalAccess.class));
-                                                    ((Activity)context).finish();
+                                                    ((Activity) context).finish();
                                                 }
                                             });
                                         }
@@ -189,60 +173,7 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
         });
     }
 
-    private void updateCategoryName(String newCategory, String oldCategory, String img) {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("Category", newCategory);
-        hashMap.put("ImageLink", img );
-        reference.child(newCategory).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                reference.child(oldCategory).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-                        reference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot snap : snapshot.getChildren()){
-                                    if (Objects.equals(snap.child("Category").getValue(), oldCategory)) {
-                                        DatabaseReference ref1 = snap.getRef();
-                                        HashMap<String, Object> hashMap = new HashMap<>();
-                                        hashMap.put("Category", newCategory);
-                                        ref1.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Toast.makeText(context, "Success", Toast.LENGTH_SHORT);
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT);
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
 
-
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-    }
 
     @Override
     public int getItemCount() {

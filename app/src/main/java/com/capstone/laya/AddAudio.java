@@ -1,5 +1,8 @@
 package com.capstone.laya;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
 import static android.util.Log.e;
 
 import android.app.AlertDialog;
@@ -11,8 +14,13 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +56,7 @@ public class AddAudio extends AppCompatActivity {
 
     Button uploadAudio, uploadImage, upload;
     private static final int REQUEST_PICK_AUDIO = 2;
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private final int PICK_IMAGE_REQUEST = 22;
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 101;
@@ -65,6 +74,9 @@ public class AddAudio extends AppCompatActivity {
     EditText name;
 
     FirebaseUser user;
+    private TextToSpeechHelper textToSpeechHelper;
+
+    String ImageLink, AudioLink, FileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +93,9 @@ public class AddAudio extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
+        textToSpeechHelper = new TextToSpeechHelper(AddAudio.this);
+
+
         storageReference = storage.getReference().child("Audio Added by User").child(user.getUid());
 
         category = getIntent().getExtras().getString("Category");
@@ -93,17 +108,28 @@ public class AddAudio extends AppCompatActivity {
                 builder.setItems(option, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                         switch (i){
-                             case 0:
-                                 checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
-                                 break;
-                             case 1:
-                                 Toast.makeText(AddAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
-                                 break;
-                             case 2:
-                                 Toast.makeText(AddAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
-                                 break;
-                         }
+                        switch (i) {
+                            case 0:
+                                checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+                                break;
+                            case 1:
+
+                                break;
+                            case 2:
+                                File myDirectory = new File(Environment.getExternalStorageDirectory(), "/AudioAAC");
+                                if(!myDirectory.exists()){
+                                    checkPermissionForDir();
+                                    if(checkPermissionForDir()){
+                                        myDirectory.mkdirs();
+
+                                    }else{
+                                        requestPermissionforDR();
+                                    }
+                                }
+
+                                showTTSDialog();
+                                break;
+                        }
                     }
                 });
                 builder.create().show();
@@ -120,9 +146,97 @@ public class AddAudio extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadAudio(audioUri, fname);
+                save();
+
             }
         });
+    }
+
+    private void showTTSDialog() {
+        LayoutInflater inflater = LayoutInflater.from(AddAudio.this);
+        View dialogview = inflater.inflate(R.layout.dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(AddAudio.this)
+                .setView(dialogview)
+                .setTitle("Type the wrod")
+                .setPositiveButton("Save", null) //Set to null. We override the onclick
+                .setNegativeButton("Cancel", null)
+                .setNeutralButton("Play", null)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button save = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                save.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        //What ever you want to do with the value
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        //OR
+                        String TTS = YouEditTextValue.getText().toString();
+
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Save");
+                        dialog.dismiss();
+                    }
+                });
+                Button cancel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+                cancel.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                Button play = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
+                play.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        //OR
+                        String TTS = YouEditTextValue.getText().toString();
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play");
+                    }
+                });
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void save() {
+
+        if(name.getText().toString()!=null && !name.getText().toString().equals("")){
+            if(category!= null && FileName!= null && AudioLink != null&& ImageLink != null){
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("Name", name.getText().toString());
+                hashMap.put("Category", category);
+                hashMap.put("FileName", FileName);
+                hashMap.put("FileLink", AudioLink);
+                hashMap.put("ImageLink", ImageLink);
+                reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
+                        i.putExtra("Category", category);
+                        startActivity(i);
+                        finish();
+                        Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+            }else {
+                Toast.makeText(AddAudio.this, "Please add image or audio", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(AddAudio.this, "Please enter AAC Name", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void SelectImage() {
@@ -138,23 +252,25 @@ public class AddAudio extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_PICK_AUDIO:
-                    if (RESULT_OK == resultCode) {
-                        if(data!=null){
-                            audioUri = data.getData();
-                            try{
-                                //call the getPath uri with context and uri
-                                //To get path from uri
-                                String path = getPath(this, audioUri);
-                                File file = new File(path);
-                                fname = file.getName();
-                                fname = fname.replaceAll("\\..*", "");
-                                audioname.setText(fname+".mp3");
-                            }catch(Exception e){
-                                e("Err", e.toString()+"");
-                            }
+                if (RESULT_OK == resultCode) {
+                    if (data != null) {
+                        audioUri = data.getData();
+                        try {
+                            //call the getPath uri with context and uri
+                            //To get path from uri
+                            String path = getPath(this, audioUri);
+                            File file = new File(path);
+                            fname = file.getName();
+                            fname = fname.replaceAll("\\..*", "");
+                            audioname.setText(fname + ".mp3");
+                            FileName = fname;
+                            uploadAudio(audioUri, fname);
+                        } catch (Exception e) {
+                            e("Err", e.toString() + "");
                         }
                     }
-                    break;
+                }
+                break;
             case PICK_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null && data.getData() != null) {
                     // Get the Uri of data
@@ -163,6 +279,7 @@ public class AddAudio extends AppCompatActivity {
                         // Setting image on image view using Bitmap
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagefilePath);
                         AudioImage.setImageBitmap(bitmap);
+                        uploadImage(category);
                     } catch (IOException e) {
                         // Log the exception
                         e.printStackTrace();
@@ -171,61 +288,72 @@ public class AddAudio extends AppCompatActivity {
                 break;
         }
     }
-    public void uploadAudio(Uri audioUri, String filename){
+
+    public void uploadAudio(Uri audioUri, String filename) {
         String AudioId = String.valueOf(System.currentTimeMillis());
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading Audio...");
         progressDialog.show();
-            String filePathAndName = category+"/"+filename+"_"+AudioId;
-            StorageReference ref = storageReference.child(filePathAndName);
-            ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uriTask.isSuccessful()) ;
-                    if(uriTask.isSuccessful()) {
-                        String downloadUri = uriTask.getResult().toString();
-                        Toast.makeText(AddAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("Name", name.getText().toString());
-                        hashMap.put("Category", category);
-                        hashMap.put("FileName", filename + ".mp3");
-                        hashMap.put("FileLink", downloadUri);
-                        reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                uploadImage(category,filename);
-                                progressDialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                            }
-                        });
-                    }
+        String filePathAndName = category + "/" + filename + "_" + AudioId;
+        StorageReference ref = storageReference.child(filePathAndName);
+        ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful()) ;
+                if (uriTask.isSuccessful()) {
+                    String downloadUri = uriTask.getResult().toString();
+                    AudioLink = downloadUri;
+                    progressDialog.dismiss();
+                    Toast.makeText(AddAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+            }
+        }).addOnProgressListener(
+                new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    // Progress Listener for loading
+                    // percentage on the dialog box
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress
+                                = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                    }
+                });
+    }
+
+    public void uploadAduioFromTTS(Uri audioUri, String filename){
+        String AudioId = String.valueOf(System.currentTimeMillis());
+        audioname.setText(filename + ".mp3");
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Audio...");
+        progressDialog.show();
+        String filePathAndName = category + "/" + filename + "_" + AudioId;
+        StorageReference ref = storageReference.child(filePathAndName);
+        ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful()) ;
+                if (uriTask.isSuccessful()) {
+                    String downloadUri = uriTask.getResult().toString();
+                    FileName = filename;
+                    audioname.setText(filename);
+                    Toast.makeText(AddAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                    AudioLink = downloadUri;
                     progressDialog.dismiss();
                 }
-            }).addOnProgressListener(
-                    new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        // Progress Listener for loading
-                        // percentage on the dialog box
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress
-                                    = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                        }
-                    });
-    }
-    public  String getPath(Context context, Uri uri) throws URISyntaxException {
+            }
+        });
+        }
+
+    public String getPath(Context context, Uri uri) throws URISyntaxException {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { "_data" };
+            String[] projection = {"_data"};
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, null, null, null);
@@ -236,21 +364,21 @@ public class AddAudio extends AppCompatActivity {
             } catch (Exception e) {
                 // Eat it
             }
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
 
         return null;
     }
-    private void uploadImage(String categoryName,String filename) {
+
+    private void uploadImage(String categoryName) {
         if (imagefilePath != null) {
             // Code for showing progressDialog while uploading
             ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading Image...");
             progressDialog.show();
             // Defining the child of storageReference
-            StorageReference ref = storageReference.child(categoryName+"_"+"Audio_Images/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(categoryName + "_" + "Audio_Images/" + UUID.randomUUID().toString());
             // adding listeners on upload
             // or failure of image
             ref.putFile(imagefilePath)
@@ -261,25 +389,10 @@ public class AddAudio extends AppCompatActivity {
                                     // Image uploaded successfully
                                     // Dismiss dialog
                                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                    while (!uriTask.isSuccessful());
-                                    if(uriTask.isSuccessful()){
-                                        String downloadUri = uriTask.getResult().toString();
-                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-                                        HashMap<String, Object> hashMap = new HashMap<>();
-                                        hashMap.put("ImageLink", downloadUri);
-                                        reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
-                                                i.putExtra("Category", categoryName);
-                                                startActivity(i);
-                                                finish();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                            }
-                                        });
+                                    while (!uriTask.isSuccessful()) ;
+                                    if (uriTask.isSuccessful()) {
+                                        String ImagedownloadUri = uriTask.getResult().toString();
+                                        ImageLink = ImagedownloadUri;
                                     }
                                     progressDialog.dismiss();
                                     Toast.makeText(AddAudio.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
@@ -308,37 +421,78 @@ public class AddAudio extends AppCompatActivity {
         }
     }
 
-    public void checkPermission(String permission, int requestCode)
-    {
+    public void checkPermission(String permission, int requestCode) {
         // Checking if permission is not granted
         if (ContextCompat.checkSelfPermission(AddAudio.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(AddAudio.this, new String[] { permission }, requestCode);
-        }
-        else {
+            ActivityCompat.requestPermissions(AddAudio.this, new String[]{permission}, requestCode);
+        } else {
             pickAudio();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(AddAudio.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
-                pickAudio();
-            }
-            else {
-                Toast.makeText(AddAudio.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
-            }
+
+        switch (requestCode){
+            case STORAGE_PERMISSION_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(AddAudio.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+                    pickAudio();
+                } else {
+                    Toast.makeText(AddAudio.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                    if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
+                        showTTSDialog();
+                    } else {
+                        Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
         }
     }
 
     private void pickAudio() {
-        Intent pickAudioIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Intent pickAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
+    }
+
+
+    private void requestPermissionforDR() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 2296);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 2296);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(AddAudio.this, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+    private boolean checkPermissionForDir() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(AddAudio.this, READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(AddAudio.this, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        }
     }
     @Override
     public void onBackPressed() {
