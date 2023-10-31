@@ -93,6 +93,7 @@ public class TextToSpeechHelper {
     private Context context;
     private File localPath;
     String action;
+    String AddorEdit;
 
     private Handler handler;
     private Runnable handlerTask;
@@ -138,8 +139,16 @@ public class TextToSpeechHelper {
                 System.out.println(uri);
                 String filename = localPath.getName();
                 System.out.println(filename);
-                AddAudio addAudio = (AddAudio) context;
-                addAudio.uploadAduioFromTTS(uri,filename);
+
+                if(AddorEdit.equals("Add")){
+                    AddAudio addAudio = (AddAudio) context;
+                    addAudio.uploadAduioFromTTS(uri,filename);
+                }else if(AddorEdit.equals("Edit")){
+                    EditAudio editAudio = (EditAudio) context;
+                    editAudio.uploadAduioFromTTS(uri,filename);
+
+                }
+
             }
         });
 
@@ -149,8 +158,9 @@ public class TextToSpeechHelper {
 
 
 
-    public TextToSpeechHelper(Context context) {
+    public TextToSpeechHelper(Context context, String AddorEdit) {
         this.context = context;
+        this.AddorEdit = AddorEdit;
         mHandler = new Handler();
 
         fetchAccessToken();

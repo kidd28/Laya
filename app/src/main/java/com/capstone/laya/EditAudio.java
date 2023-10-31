@@ -1,5 +1,8 @@
 package com.capstone.laya;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
 import static android.util.Log.e;
 
 import androidx.annotation.NonNull;
@@ -17,8 +20,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,8 +55,8 @@ import java.util.UUID;
 public class EditAudio extends AppCompatActivity {
     private static final int REQUEST_PICK_AUDIO = 2;
     private final int PICK_IMAGE_REQUEST = 22;
-    private static final int CAMERA_PERMISSION_CODE = 100;
     private static final int STORAGE_PERMISSION_CODE = 101;
+    private static final int PERMISSION_REQUEST_CODE = 1;
     Button uploadAudio, uploadImage, upload;
     ImageView AudioImage;
     TextView audioname;
@@ -66,6 +73,7 @@ public class EditAudio extends AppCompatActivity {
     String Name, Category, FilePath, FileName, FileLink, ImageLink;
 
     boolean upImg, upAudio;
+    private TextToSpeechHelper textToSpeechHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,9 @@ public class EditAudio extends AppCompatActivity {
         FileName = getIntent().getExtras().getString("FileName");
         FileLink = getIntent().getExtras().getString("FileLink");
         ImageLink = getIntent().getExtras().getString("ImageLink");
+
+
+        textToSpeechHelper = new TextToSpeechHelper(EditAudio.this, "Edit");
 
         audioname.setText(FileName);
         name.setText(Name);
@@ -115,7 +126,18 @@ public class EditAudio extends AppCompatActivity {
                                 Toast.makeText(EditAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                Toast.makeText(EditAudio.this, "Wala pa to", Toast.LENGTH_SHORT).show();
+                                File myDirectory = new File(Environment.getExternalStorageDirectory(), "/AudioAAC");
+                                if(!myDirectory.exists()){
+                                    checkPermissionForDir();
+                                    if(checkPermissionForDir()){
+                                        myDirectory.mkdirs();
+
+                                    }else{
+                                        requestPermissionforDR();
+                                    }
+                                }
+
+                                showTTSDialog();
                                 break;
                         }
                     }
@@ -156,7 +178,9 @@ public class EditAudio extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 reference.child(Name).removeValue();
-                startActivity(new Intent(EditAudio.this, ParentAccessAudio.class));
+                Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
+                i.putExtra("Category", Category);
+                startActivity(i);
                 finish();
             }
         });
@@ -174,14 +198,12 @@ public class EditAudio extends AppCompatActivity {
         reference.child(Name).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                startActivity(new Intent(EditAudio.this, ParentAccessAudio.class));
-                finish();
+                Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
+                i.putExtra("Category", Category);
+                startActivity(i);
             }
         });
-
-
     }
-
     private void SelectImage() {
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
@@ -357,4 +379,110 @@ public class EditAudio extends AppCompatActivity {
                     });
         }
     }
+
+    private void showTTSDialog() {
+        LayoutInflater inflater = LayoutInflater.from(EditAudio.this);
+        View dialogview = inflater.inflate(R.layout.dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(EditAudio.this)
+                .setView(dialogview)
+                .setTitle("Type the wrod")
+                .setPositiveButton("Save", null) //Set to null. We override the onclick
+                .setNegativeButton("Cancel", null)
+                .setNeutralButton("Play", null)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button save = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                save.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        //What ever you want to do with the value
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        //OR
+                        String TTS = YouEditTextValue.getText().toString();
+
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Save");
+                        dialog.dismiss();
+                    }
+                });
+                Button cancel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+                cancel.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                Button play = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
+                play.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        //OR
+                        String TTS = YouEditTextValue.getText().toString();
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play");
+                    }
+                });
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void requestPermissionforDR() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 2296);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 2296);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(EditAudio.this, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+    public void uploadAduioFromTTS(Uri audioUri, String filename){
+        String AudioId = String.valueOf(System.currentTimeMillis());
+        audioname.setText(filename + ".mp3");
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Audio...");
+        progressDialog.show();
+        String filePathAndName = Category + "/" + filename + "_" + AudioId;
+        StorageReference ref = storageReference.child(filePathAndName);
+        ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful()) ;
+                if (uriTask.isSuccessful()) {
+                    String downloadUri = uriTask.getResult().toString();
+                    FileName = filename;
+                    audioname.setText(filename);
+                    Toast.makeText(EditAudio.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                    FileLink = downloadUri;
+                    progressDialog.dismiss();
+                }
+            }
+        });
+    }
+    private boolean checkPermissionForDir() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(EditAudio.this, READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(EditAudio.this, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
+
 }

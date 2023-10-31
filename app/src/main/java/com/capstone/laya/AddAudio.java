@@ -93,7 +93,7 @@ public class AddAudio extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
-        textToSpeechHelper = new TextToSpeechHelper(AddAudio.this);
+        textToSpeechHelper = new TextToSpeechHelper(AddAudio.this,"Add");
 
 
         storageReference = storage.getReference().child("Audio Added by User").child(user.getUid());
