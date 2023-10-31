@@ -249,7 +249,7 @@ public class TextToSpeechHelper {
             // folder of this client app. You should never do this in your app. Instead, store
             // the file in your server and obtain an access token from there.
             // *******************
-            final InputStream stream = context.getResources().openRawResource(R.raw.texttospeech);
+            final InputStream stream = context.getResources().openRawResource(R.raw.laya);
             try {
                 final GoogleCredentials credentials = GoogleCredentials.fromStream(stream)
                         .createScoped(SCOPE);
