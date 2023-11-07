@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.media.audiofx.NoiseSuppressor
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -246,7 +247,12 @@ class AudioRecorderView @JvmOverloads constructor(
 
     private fun initializeAudioRecorder() {
         val recordConfig = customConfig()
-        val audioSource = DefaultAudioSource(recordConfig)
+
+        if(NoiseSuppressor.isAvailable()){
+            val audioSource = NoiseAudioSource(recordConfig)
+        }else{
+            val audioSource = DefaultAudioSource(recordConfig)
+        }
 
         recordFile.deleteIfExists()
         audioRecorder = NaraeAudioRecorder()

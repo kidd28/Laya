@@ -6,8 +6,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.util.Log.e;
 
-import static java.security.AccessController.getContext;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,14 +14,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.AudioRecordingConfiguration;
-import android.media.audiofx.AudioEffect;
-import android.media.audiofx.NoiseSuppressor;
+
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -191,11 +187,6 @@ public class AddAudio extends AppCompatActivity {
             }
         });
     }
-
-    private void showRecorderForNonSuppressor() {
-
-    }
-
 
     private void showRecorder(){
         LayoutInflater factory = LayoutInflater.from(AddAudio.this);
