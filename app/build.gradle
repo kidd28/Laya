@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+
 }
 
 android {
@@ -79,8 +80,10 @@ dependencies {
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.github.AgnaldoNP:ANPAudioRecorder:1.0'
 
+
+    implementation project(":audiorecorder")
 
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'

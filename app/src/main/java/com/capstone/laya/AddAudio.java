@@ -6,6 +6,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.util.Log.e;
 
+import static java.security.AccessController.getContext;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +16,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.AudioRecordingConfiguration;
+import android.media.audiofx.AudioEffect;
+import android.media.audiofx.NoiseSuppressor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,6 +92,8 @@ public class AddAudio extends AppCompatActivity {
     AudioRecorderView recordView;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +152,7 @@ public class AddAudio extends AppCompatActivity {
                                                 new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                 REQUEST_STORAGE_PERMISSION);
                                     }else {
-                                        showRecorder();
+                                            showRecorder();
                                     }
                                 }
                                 break;
@@ -185,6 +192,11 @@ public class AddAudio extends AppCompatActivity {
         });
     }
 
+    private void showRecorderForNonSuppressor() {
+
+    }
+
+
     private void showRecorder(){
         LayoutInflater factory = LayoutInflater.from(AddAudio.this);
         final View audiorecorder = factory.inflate(R.layout.audiorecorder, null);
@@ -192,6 +204,7 @@ public class AddAudio extends AppCompatActivity {
         AudioRecorderDialog.setView(audiorecorder);
         Button save= audiorecorder.findViewById(R.id.upload);
         EditText filename = audiorecorder.findViewById(R.id.filename);
+
         recordView = audiorecorder.findViewById(R.id.recordView);
 
         recordView.setOnFinishRecord(new AudioRecorderView.OnFinishRecordListener() {
@@ -227,6 +240,8 @@ public class AddAudio extends AppCompatActivity {
         });
         AudioRecorderDialog.show();
     }
+
+
     private void showTTSDialog() {
         LayoutInflater inflater = LayoutInflater.from(AddAudio.this);
         View dialogview = inflater.inflate(R.layout.dialog, null);
