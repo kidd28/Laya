@@ -103,7 +103,6 @@ public class AudioFragment extends Fragment {
             // System.out.println(category);
             cat.setText(category);
         }
-
         loadAudio();
         loadAudioAddedbyUser();
         return v;
@@ -123,7 +122,6 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -137,13 +135,8 @@ public class AudioFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     if (Objects.equals(snap.child("Category").getValue(), category)) {
-                        for (DataSnapshot s : snap.getChildren()) {
-                            if (!s.getKey().equals("Category") && !s.getKey().equals("ImageLink")) {
-                                AudioModel model = s.getValue(AudioModel.class);
-                                audioModels.add(model);
-                            }
-
-                        }
+                        AudioModel model = snap.getValue(AudioModel.class);
+                        audioModels.add(model);
                     }
                 }
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
@@ -156,4 +149,6 @@ public class AudioFragment extends Fragment {
             }
         });
     }
+
+
 }

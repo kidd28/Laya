@@ -287,7 +287,7 @@ public class AddAudio extends AppCompatActivity {
     }
 
     private void save() {
-
+        String id = String.valueOf(System.currentTimeMillis());
         if(name.getText().toString()!=null && !name.getText().toString().equals("")){
             if(category!= null && FileName!= null && AudioLink != null&& ImageLink != null){
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
@@ -297,6 +297,7 @@ public class AddAudio extends AppCompatActivity {
                 hashMap.put("FileName", FileName);
                 hashMap.put("FileLink", AudioLink);
                 hashMap.put("ImageLink", ImageLink);
+                hashMap.put("Id", id);
                 reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

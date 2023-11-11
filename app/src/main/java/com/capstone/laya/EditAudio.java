@@ -195,6 +195,7 @@ public class EditAudio extends AppCompatActivity {
     }
 
     private void SaveNew() {
+        String id = String.valueOf(System.currentTimeMillis());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Name", name.getText().toString());
@@ -203,6 +204,7 @@ public class EditAudio extends AppCompatActivity {
         hashMap.put("FileName", FileName);
         hashMap.put("FileLink", FileLink);
         hashMap.put("ImageLink", ImageLink);
+        hashMap.put("Id", id);
         reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
