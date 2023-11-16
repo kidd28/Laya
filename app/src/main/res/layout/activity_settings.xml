@@ -1,19 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primaryblue">
 
-    <include
+    <LinearLayout
+        android:id="@+id/linearback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/backwhite"
+            android:layout_width="@dimen/_11sdp"
+            android:layout_height="@dimen/_11sdp"
+            android:src="@drawable/backwhite"
+            android:layout_marginLeft="@dimen/_18sdp"
+            android:layout_marginTop="@dimen/_18sdp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relprofile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-    <TextView
-        android:id="@+id/eme"
+        android:layout_below="@+id/linearback"
+        android:layout_marginTop="@dimen/_13sdp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pfp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/luffy"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/_28sdp"
+            app:civ_border_width="@dimen/_3sdp"
+            app:civ_border_color="@color/white"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mian"
+            android:fontFamily="@font/handosoftbold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20sdp"
+            android:layout_toRightOf="@+id/pfp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"/>
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_toRightOf="@id/pfp"
+            android:fontFamily="@font/handosoftbold"
+            android:text="miancarolino@gmail.com"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp"
+            tools:ignore="TextSizeCheck" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_marginTop="@dimen/_5sdp"
+        android:id="@+id/parentalaccess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SETTINGS"
-        android:textSize="50dp"
-        android:layout_centerInParent="true"/>
+        android:backgroundTint="@color/white"
+        android:text="Customize AAC"
+        android:textColor="@color/fontblue"
+        android:layout_below="@id/relprofile"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/handosoftbold" />
+
+
+
+
 
 </RelativeLayout>
