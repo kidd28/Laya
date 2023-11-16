@@ -40,13 +40,22 @@ public class Settings extends AppCompatActivity {
     TextView message;
     GoogleSignInClient mGoogleSignInClient;
 
-    Button signout;
+    Button signout, parentalacess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        parentalacess = findViewById(R.id.parentalaccess);
+
+        parentalacess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this, ParentalAccess.class));
+////            finish();
+            }
+        });
 
     }
 }

@@ -47,7 +47,7 @@ public class Dashboard extends AppCompatActivity {
     FirebaseUser user;
     GoogleSignInClient mGoogleSignInClient;
 
-    ImageView speak, clear;
+    ImageView speak, clear, setting, rotate;
 
 
     private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -72,6 +72,8 @@ public class Dashboard extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         clear = findViewById(R.id.clear);
         speak = findViewById(R.id.speak);
+        setting = findViewById(R.id.setting);
+        rotate = findViewById(R.id.rotate);
         rv = findViewById(R.id.rv);
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
@@ -111,6 +113,28 @@ public class Dashboard extends AppCompatActivity {
                 speak();
             }
         });
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Dashboard.this, Settings.class));
+////            finish();
+            }
+        });
+
+        rotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                 currentOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                } else {
+                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                 currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                }
+            }
+        });
+
     }
 
     private void speak() {
@@ -174,34 +198,34 @@ public class Dashboard extends AppCompatActivity {
     }
 
     //<<<
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.parental_access) {
-            startActivity(new Intent(Dashboard.this, ParentalAccess.class));
-            finish();
-        }
-        if (id == R.id.settings) {
-            startActivity(new Intent(Dashboard.this, Settings.class));
-            finish();
-        }
-        if (id == R.id.rotate) {
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            }
-        }
-        return true;
-    } ///>>>>
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int id = item.getItemId();
+////        if (id == R.id.parental_access) {
+////            startActivity(new Intent(Dashboard.this, ParentalAccess.class));
+////            finish();
+////        }
+//        if (id == R.id.settings) {
+//            startActivity(new Intent(Dashboard.this, ParentalAccess.class));
+//            finish();
+//        }
+//        if (id == R.id.rotate) {
+//            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+//            } else {
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//            }
+//        }
+//        return true;
+//    } ///>>>>
     private void playAudio(String audioUrl) {
         // initializing media player
         MediaPlayer mediaPlayer = new MediaPlayer();
