@@ -3,21 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AudioFragment">
+    tools:context=".fragments.AudioFragment"
+    android:layout_marginTop="@dimen/_10sdp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/cat"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_30sdp"
-            android:gravity="center_horizontal"
-            android:text="Category"
-            android:textSize="@dimen/_30sdp" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="@dimen/_11sdp"
+                android:layout_height="@dimen/_11sdp"
+                android:src="@drawable/back"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_18sdp"/>
+
+            <TextView
+                android:id="@+id/cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_30sdp"
+                android:fontFamily="@font/handosoftbold"
+                android:gravity="center"
+                android:text="Category"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_25sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
