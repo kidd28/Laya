@@ -25,6 +25,6 @@ public class SplashScreen extends AppCompatActivity {
                 finish();
             }
         }, secondsDelayed * 5000);
-        Glide.with(this).load(R.drawable.logo).centerCrop().into(logo);
+        Glide.with(this).load(R.drawable.splashscreen).centerCrop().into(logo);
     }
 }
