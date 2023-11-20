@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +54,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playAudio(model.getFileLink());
-
+                audioPlayer(Environment.getExternalStorageDirectory().getPath()+"/AudioAAC/"+model.getId()+".mp3");
                 Dashboard dashboard = (Dashboard) context;
                 dashboard.additem(model.getId(), model.getCategory());
             }
@@ -81,25 +81,16 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.HolderAdapte
         }
     }
 
-    private void playAudio(String audioUrl) {
-        // initializing media player
-        MediaPlayer mediaPlayer = new MediaPlayer();
+    public void audioPlayer(String path){
+        //set up MediaPlayer
+        MediaPlayer mp = new MediaPlayer();
 
-        // below line is use to set the audio stream type for our media player.
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            // below line is use to set our
-            // url to our media player.
-            mediaPlayer.setDataSource(audioUrl);
-
-            // below line is use to prepare
-            // and start our media player.
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-
-            // below line is use to display a toast message.
-        } catch (IOException e) {
-            // this line of code is use to handle error while playing our audio file.
+            mp.setDataSource(path );
+            mp.prepare();
+            mp.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -89,7 +89,6 @@ public class AudioFragment extends Fragment {
         rv = v.findViewById(R.id.rv);
         cat = v.findViewById(R.id.cat);
 
-
         audioModels = new ArrayList<>();
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
@@ -110,6 +109,7 @@ public class AudioFragment extends Fragment {
 
     private void loadAudioAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -130,6 +130,7 @@ public class AudioFragment extends Fragment {
 
     private void loadAudio() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

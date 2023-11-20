@@ -88,8 +88,6 @@ public class AddAudio extends AppCompatActivity {
     AudioRecorderView recordView;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -376,7 +374,7 @@ public class AddAudio extends AppCompatActivity {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading Audio...");
         progressDialog.show();
-        String filePathAndName = category + "/" + filename + "_" + AudioId;
+        String filePathAndName = category + "/" + filename;
         StorageReference ref = storageReference.child(filePathAndName);
         ref.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -460,7 +458,7 @@ public class AddAudio extends AppCompatActivity {
             progressDialog.setTitle("Uploading Image...");
             progressDialog.show();
             // Defining the child of storageReference
-            StorageReference ref = storageReference.child(categoryName + "_" + "Audio_Images/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(categoryName + "_" + "Images/" + UUID.randomUUID().toString());
             // adding listeners on upload
             // or failure of image
             ref.putFile(imagefilePath)
@@ -546,8 +544,6 @@ public class AddAudio extends AppCompatActivity {
         Intent pickAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
     }
-
-
     private void requestPermissionforDR() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             try {
@@ -582,6 +578,4 @@ public class AddAudio extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-
-
 }

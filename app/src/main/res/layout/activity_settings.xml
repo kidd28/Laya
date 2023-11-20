@@ -37,7 +37,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="@dimen/_28sdp"
             app:civ_border_width="@dimen/_3sdp"
-            app:civ_border_color="@color/white"/>
+            app:civ_border_color="@color/white"
+            tools:ignore="MissingClass" />
 
         <TextView
             android:id="@+id/name"

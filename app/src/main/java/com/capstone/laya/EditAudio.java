@@ -156,17 +156,16 @@ public class EditAudio extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                File myDirectory = new File(Environment.getExternalStorageDirectory(), "/AudioAAC");
-                                if(!myDirectory.exists()){
-                                    checkPermissionForDir();
-                                    if(checkPermissionForDir()){
-                                        myDirectory.mkdirs();
-
-                                    }else{
-                                        requestPermissionforDR();
-                                    }
+                                if (ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED ||
+                                        ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(EditAudio.this,
+                                            new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            REQUEST_STORAGE_PERMISSION);
+                                }else {
+                                    showTTSDialog();
                                 }
-                                showTTSDialog();
                                 break;
                         }
                     }
@@ -474,25 +473,6 @@ public class EditAudio extends AppCompatActivity {
             }
         });
         dialog.show();
-
-    }
-
-    private void requestPermissionforDR() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
-                startActivityForResult(intent, 2296);
-            } catch (Exception e) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(intent, 2296);
-            }
-        } else {
-            //below android 11
-            ActivityCompat.requestPermissions(EditAudio.this, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
     }
     public void uploadAduioFromTTS(Uri audioUri, String filename){
         String AudioId = String.valueOf(System.currentTimeMillis());
@@ -517,15 +497,6 @@ public class EditAudio extends AppCompatActivity {
                 }
             }
         });
-    }
-    private boolean checkPermissionForDir() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int result = ContextCompat.checkSelfPermission(EditAudio.this, READ_EXTERNAL_STORAGE);
-            int result1 = ContextCompat.checkSelfPermission(EditAudio.this, WRITE_EXTERNAL_STORAGE);
-            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-        }
     }
 
     private void showRecorder(){

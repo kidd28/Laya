@@ -32,8 +32,6 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class CategoryFragment extends Fragment {
-
-
     RecyclerView rv;
     CategoriesAdapter adapter;
     FirebaseUser user;
@@ -85,19 +83,18 @@ public class CategoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_category, container, false);
         // Inflate the layout for this fragment
         rv = v.findViewById(R.id.rv);
-
         categoriesModels = new ArrayList<>();
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         rv.setLayoutManager(layoutManager);
         loadCategories();
-
         return v;
     }
 
     private void loadCategoriesAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -118,6 +115,7 @@ public class CategoryFragment extends Fragment {
     }
     private void loadCategories() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory");
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -129,12 +127,10 @@ public class CategoryFragment extends Fragment {
                 rv.setAdapter(categoriesAdapter);
                 loadCategoriesAddedbyUser();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
     }
 }
