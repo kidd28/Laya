@@ -90,8 +90,6 @@ public class ParentAuidoAdapter extends RecyclerView.Adapter<ParentAuidoAdapter.
                                 intent.putExtra("ImageLink", model.getImageLink());
                                 context.startActivity(intent);
                                 ((Activity) context).finish();
-
-
                                 break;
                             case R.id.delete:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);

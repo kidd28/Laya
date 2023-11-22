@@ -49,7 +49,6 @@ public class ParentalAccess extends AppCompatActivity {
     ArrayList<CategoriesModel> categoriesModels;
 
 
-    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,6 @@ public class ParentalAccess extends AppCompatActivity {
         Glide.with(this).load(R.drawable.back).centerCrop().into(back);
         Glide.with(this).load(R.drawable.add).centerCrop().into(add);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         rv = findViewById(R.id.rv);
 
@@ -87,6 +85,8 @@ public class ParentalAccess extends AppCompatActivity {
     }
 
     private void loadCategoriesAddedbyUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,9 +97,7 @@ public class ParentalAccess extends AppCompatActivity {
                 }
                 ParentCategoryAdapter categoriesAdapter = new ParentCategoryAdapter(ParentalAccess.this, categoriesModels);
                 rv.setAdapter(categoriesAdapter);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -135,9 +133,6 @@ public class ParentalAccess extends AppCompatActivity {
         startActivity(new Intent(ParentalAccess.this, Dashboard.class));
         finish();
     }
-
-
-
 
 
 }

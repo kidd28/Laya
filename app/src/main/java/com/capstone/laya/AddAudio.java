@@ -299,11 +299,12 @@ public class AddAudio extends AppCompatActivity {
                 reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                      //  Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
                         i.putExtra("Category", category);
                         startActivity(i);
                         finish();
-                        Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

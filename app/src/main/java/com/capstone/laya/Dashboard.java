@@ -1,13 +1,21 @@
 package com.capstone.laya;
 
 import static android.app.PendingIntent.getActivity;
+import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,8 +24,10 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.media.audiofx.Equalizer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,6 +60,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -60,6 +71,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Dashboard extends AppCompatActivity {
     FirebaseDatabase database;
+    private static final int STORAGE_PERMISSION_CODE = 23;
     private static final int REQUEST_STORAGE_PERMISSION = 101;
     DatabaseReference reference;
     FirebaseAuth mAuth;
@@ -83,12 +95,15 @@ public class Dashboard extends AppCompatActivity {
     boolean loaded;
     AudioManager audioManager;
 
+    ProgressDialog progressDialog;
+    MediaPlayer mp;
+    MediaPlayer mp2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -106,8 +121,11 @@ public class Dashboard extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Users");
 
-        loaded = false;
 
+
+        loaded = false;
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Initializing AAC, please wait..");
 
         Glide.with(this).load(R.drawable.trash).into(clear);
         Glide.with(this).load(R.drawable.speaking).into(speak);
@@ -145,7 +163,7 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Dashboard.this, Settings.class));
-////            finish();
+                finish();
             }
         });
 
@@ -162,99 +180,157 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
-        download();
+        if (checkStoragePermissions()) {
+            download();
+        } else {
+            requestForStoragePermissions();
+        }
+
     }
 
+    public boolean checkStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //Android is 11 (R) or above
+            return Environment.isExternalStorageManager();
+        } else {
+            //Below android 11
+            int write = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
+    private void requestForStoragePermissions() {
+        //Android is 11 (R) or above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent();
+                intent.setAction(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                storageActivityResultLauncher.launch(intent);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                storageActivityResultLauncher.launch(intent);
+            }
+        } else {
+            //Below android 11
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    },
+                    STORAGE_PERMISSION_CODE
+            );
+        }
+
+    }
+
+    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                //Android is 11 (R) or above
+                                if (Environment.isExternalStorageManager()) {
+                                    download();
+                                    //Manage External Storage Permissions Granted
+                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
+                                } else {
+                                    Toast.makeText(Dashboard.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                //Below android 11
+
+                            }
+                        }
+                    });
+
     private void speak() {
-        /**MediaPlayer mp = new MediaPlayer();
-         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-         try {
-         mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
-         mp.prepare();
-         mp.start();
-         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-        @Override public void onCompletion(MediaPlayer mp) {
-        mp.stop();
-        mp.reset();
-        count++;
-        if (count < audioModels.size()) {
-        try {
-        mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
-        mp.prepare();
-        mp.start();
-        } catch (IOException e) {
-        throw new RuntimeException(e);
-        }
-        } else {
+        mp = new MediaPlayer();
+        mp2 = new MediaPlayer();
         count = 0;
-        }
-        }
-        });
-         } catch (Exception e) {
-         e.printStackTrace();
-         }**/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-
-            soundPool = new SoundPool.Builder()
-                    .setMaxStreams(audioModels.size())
-                    .setAudioAttributes(audioAttributes)
-                    .build();
-        } else {
-            soundPool = new SoundPool(audioModels.size(), AudioManager.STREAM_MUSIC, 0);
-        }
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        volume = actVolume / maxVolume;
-
-        soundId = soundPool.load(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3", 1);
-
-
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId,
-                                       int status) {
-                Log.i("OnLoadCompleteListener", "Sound " + sampleId + " loaded.");
-                loaded = true;
-                soundPool.play(soundId, 1, 1, 1, 0, 1f);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        count++;
+        try {
+            mp.reset();
+            mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
+            mp.prepare();
+            count++;
+            mp2.reset();
+            mp2.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
+            mp2.prepare();
+            mp.setNextMediaPlayer(mp2);
+            mp.start();
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mp.stop();
+                    count++;
+                    if (mp2 != null) {
+                        mp2.start();
                         if (count < audioModels.size()) {
-                            soundId = soundPool.load(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3", 1);
+                            try {
+                                mp.reset();
+                                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
+                                mp.prepare();
+                                mp2.setNextMediaPlayer(mp);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         } else {
+                            mp.stop();
+                            mp.reset();
+                            mp.release();
+                            mp = null;
                             count = 0;
                         }
                     }
-                }, 500);
-            }
-        });
 
-        /**  MediaPlayer mp = new MediaPlayer();
-         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-         for (AudioModel audioModel : audioModels) {
-         try {
-         mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModel.getId() + ".mp3");
-         mp.prepare();
-         mp.start();
-         } catch (Exception e) {
-         e.printStackTrace();
-         }
-         mp.reset();
-         }**/
+                }
+            });
+            mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mp2.stop();
+                    count++;
+                    if (mp != null) {
+                        mp.start();
+                        if (count < audioModels.size()) {
+                            try {
+                                mp2.reset();
+                                mp2.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mp2.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
+                                mp2.prepare();
+                                mp.setNextMediaPlayer(mp2);
+
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        } else {
+                            mp2.reset();
+                            mp2.release();
+                            mp2 = null;
+                            count = 0;
+                        }
+                    }
+
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        soundPool.release();
-        soundPool = null;
+
     }
 
 
@@ -311,6 +387,7 @@ public class Dashboard extends AppCompatActivity {
 
 
     private void download() {
+        progressDialog.show();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -333,35 +410,46 @@ public class Dashboard extends AppCompatActivity {
                     AudioModel model = snap.getValue(AudioModel.class);
                     downloadFile(model.getFileLink(), model.getId());
                 }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+        progressDialog.dismiss();
     }
 
     private void downloadFile(String fileLink, String id) {
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(fileLink);
-
         File localFile = new File(Environment.getExternalStorageDirectory(), "/AudioAAC");
         if (!localFile.exists()) {
             localFile.mkdirs();
         } else {
+            progressDialog.show();
             File audiofile = new File(Environment.getExternalStorageDirectory(), "/AudioAAC/" + id + ".mp3");
             if (!audiofile.exists()) {
                 storageRef.getFile(audiofile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         System.out.println("Download success, " + id);
+                        download();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle any errors
                     }
+                }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull FileDownloadTask.TaskSnapshot snapshot) {
+                        double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                    }
                 });
             } else {
+                progressDialog.dismiss();
                 System.out.println("audio exist");
             }
 
@@ -369,25 +457,20 @@ public class Dashboard extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_STORAGE_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Storage permissions granted", Toast.LENGTH_SHORT).show();
-
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0) {
+                boolean write = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean read = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                if (read && write) {
+                    download();
+                    Toast.makeText(Dashboard.this, "Storage Permissions Granted", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Storage permissions denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Dashboard.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
                 }
-                break;
+            }
         }
-    }
-
-    public void audioPlayer(String path) {
-
-        //set up MediaPlayer
-
     }
 
 }

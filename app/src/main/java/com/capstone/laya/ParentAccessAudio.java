@@ -38,6 +38,7 @@ public class ParentAccessAudio extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_access_audio);
+    //    FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
@@ -66,11 +67,9 @@ public class ParentAccessAudio extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
         loadAudio();
         loadAudioAddedbyUser();
     }
-
     private void loadAudioAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {

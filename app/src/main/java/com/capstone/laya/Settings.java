@@ -53,7 +53,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.this, ParentalAccess.class));
-////            finish();
+                finish();
             }
         });
 
