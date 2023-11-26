@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryblue">
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/linearback"
@@ -79,9 +79,6 @@
         android:layout_below="@id/relprofile"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/handosoftbold" />
-
-
-
 
 
 </RelativeLayout>
