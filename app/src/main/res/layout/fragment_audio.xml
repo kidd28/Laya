@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.AudioFragment"
-    android:layout_marginTop="@dimen/_10sdp">
+    android:layout_marginTop="@dimen/_25sdp"
+    android:background="@drawable/topleft_topright_radius"
+    android:backgroundTint="@color/pastelblue">
 
 
     <LinearLayout
@@ -21,7 +23,7 @@
                 android:layout_height="@dimen/_11sdp"
                 android:src="@drawable/back"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_18sdp"/>
+                android:layout_marginLeft="@dimen/_25sdp"/>
 
             <TextView
                 android:id="@+id/cat"
@@ -33,7 +35,7 @@
                 android:gravity="center"
                 android:text="Category"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_25sdp"
+                android:textSize="@dimen/_23sdp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"/>
 

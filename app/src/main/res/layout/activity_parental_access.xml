@@ -15,13 +15,15 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue">
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/_5sdp">
 
             <ImageView
                 android:id="@+id/back"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_width="@dimen/_11sdp"
+                android:layout_height="@dimen/_11sdp"
+                android:layout_marginLeft="@dimen/_18sdp"
+                android:src="@drawable/back"/>
 
             <TextView
                 android:layout_gravity="center"
@@ -30,31 +32,39 @@
                 android:layout_height="@dimen/_32sdp"
                 android:text="Parental Access"
                 android:textSize="@dimen/_20sdp"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/handosoftbold"/>
 
             <ImageView
                 android:id="@+id/add"
                 android:layout_gravity="end"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_20sdp"/>
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:src="@drawable/add" />
 
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
-            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
             android:text="CATEGORIES"
-            android:textColor="@color/black"
+            android:textColor="@color/fontblue2"
+            android:fontFamily="@font/handosoftbold"
             android:textSize="@dimen/_25sdp"
-            android:layout_margin="@dimen/_30sdp"/>
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rv"/>
+            android:id="@+id/rv"
+            android:divider="@null"/>
     </LinearLayout>
 
 

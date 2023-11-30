@@ -22,13 +22,15 @@
             android:layout_height="wrap_content"
             android:text="Upload Image"
             android:layout_marginBottom="@dimen/_30sdp" />
+
         <EditText
             android:id="@+id/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Category Name"
             android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"/>
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:hint="Category Name"
+            android:minHeight="48dp" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

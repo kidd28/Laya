@@ -2,10 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="skyblue">#AAE6FF</color>
     <color name="blue">#84DBFF</color>
+
     <color name="primaryblue">#B0D9FF</color>
     <color name="fontblue">#7FB0DD</color>
+    <color name="fontblue2">#0784BA</color>
+
+
     <color name="pastelblue">#DEEBFF</color>
     <color name="pastelred">#FFDEDE</color>
     <color name="pastelgreen">#DEFFEF</color>
@@ -14,6 +19,7 @@
     <color name="pastelorange">#FFEADE</color>
     <color name="pastellime">#F6FFDE</color>
     <color name="pastelpink">#FFDEF8</color>
+
     <color name="teal_200">#80CBC4</color>
     <color name="teal_700">#00796B</color>
 </resources>
