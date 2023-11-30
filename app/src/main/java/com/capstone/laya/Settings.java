@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -40,7 +41,9 @@ public class Settings extends AppCompatActivity {
     TextView message;
     GoogleSignInClient mGoogleSignInClient;
 
-    Button signout, parentalacess;
+    Button signout;
+
+    CardView parentalacess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

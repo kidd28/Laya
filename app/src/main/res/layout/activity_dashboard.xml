@@ -53,16 +53,16 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
-                    android:padding="@dimen/_5sdp"
-                    android:background="@color/primaryblue"/>
+                    android:padding="@dimen/_6sdp"
+                    android:background="@drawable/radius_border_blue"/>
 
                 <ImageView
                     android:id="@+id/clear"
                     android:src="@drawable/trash"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
-                    android:padding="@dimen/_5sdp"
-                    android:background="@color/primaryblue"/>
+                    android:padding="@dimen/_6sdp"
+                    android:background="@drawable/radius_border_blue"/>
 
             </LinearLayout>
 
