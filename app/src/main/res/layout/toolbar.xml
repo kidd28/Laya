@@ -1,61 +1,63 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
-    app:contentInsetEnd="0dp"
-    app:contentInsetStart="0dp"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp">
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/hellouser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_18sdp"
+                android:fontFamily="@font/handosoftbold"
+                android:text="Hello Mian"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_22sdp" />
+            <ImageView
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_gravity="center"
+                android:id="@+id/flag"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:src="@drawable/ph" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/hellouser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hello Mian"
-                    android:fontFamily="@font/handosoftbold"
-                    android:textSize="@dimen/_22sdp"
-                    android:textColor="@color/black"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/_18sdp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/_18sdp">
 
-                <ImageView
-                    android:id="@+id/flag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ph"
-                    android:layout_centerInParent="true"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"/>
+            <ImageView
+                android:id="@+id/rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:src="@drawable/baseline_screen_rotation_24" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="@dimen/_18sdp">
-
-                        <ImageView
-                            android:id="@+id/rotate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_25sdp"
-                            android:src="@drawable/baseline_screen_rotation_24"
-                            android:layout_marginRight="@dimen/_15sdp"/>
-
-                        <ImageView
-                            android:id="@+id/setting"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_25sdp"
-                            android:src="@drawable/baseline_settings_24"
-                            android:layout_toRightOf="@id/setting"/>
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_toRightOf="@id/setting"
+                android:src="@drawable/baseline_settings_24" />
 
 
-                </LinearLayout>
+        </LinearLayout>
 
 
-
-        </RelativeLayout>
+    </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

@@ -48,8 +48,6 @@ public class ParentalAccess extends AppCompatActivity {
     ParentCategoryAdapter adapter;
     ArrayList<CategoriesModel> categoriesModels;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +71,6 @@ public class ParentalAccess extends AppCompatActivity {
         rv.setLayoutManager(layoutManager);
 
         loadCategories();
-
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +129,4 @@ public class ParentalAccess extends AppCompatActivity {
         startActivity(new Intent(ParentalAccess.this, Dashboard.class));
         finish();
     }
-
-
 }

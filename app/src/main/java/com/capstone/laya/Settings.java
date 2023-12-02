@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,17 +34,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class Settings extends AppCompatActivity {
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    FirebaseAuth mAuth;
-    FirebaseUser user;
-    TextView message;
-    GoogleSignInClient mGoogleSignInClient;
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class Settings extends AppCompatActivity {
+    FirebaseUser user;
     Button signout;
 
     CardView parentalacess;
+    TextView name, email;
+    CircleImageView pfp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,9 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         parentalacess = findViewById(R.id.parentalaccess);
-
+        name = findViewById(R.id.name);
+        email = findViewById(R.id.email);
+        pfp = findViewById(R.id.pfp);
         parentalacess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,5 +61,15 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        loadUserprofile();
+    }
+
+    private void loadUserprofile() {
+        Glide.with(this).load(user.getPhotoUrl()).into(pfp);
+        name.setText(user.getDisplayName());
+        email.setText(user.getEmail());
     }
 }

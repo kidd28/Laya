@@ -15,104 +15,150 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <TextView
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/email"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="end"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:text="Email: " />
-                <TextView
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/name"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="end"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Email: "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp" />
+                    <TextView
+                        android:id="@+id/EditText_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:hint="Email"
+                        android:minLines="1"
+                        android:inputType="textEmailAddress|textMultiLine"
+                        android:textSize="@dimen/_18sdp"
+                        android:scrollHorizontally="false"
+                        android:scrollbars="vertical"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Name: "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp" />
+                    <EditText
+                        android:id="@+id/EditText_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="13"
+                        android:hint="Name"
+                        android:inputType="text"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:text="Name: " />
-                <TextView
-                    android:gravity="center_vertical"
-                    android:layout_gravity="end"
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/DateOfBirth"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/DateOfBirth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Date of Birth: "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/EditText_dob"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="8"
+                            android:focusable="false"
+                            android:hint="e.g. Jan 12, 1952"
+                            android:inputType="date"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <ImageView
+                            android:id="@+id/calendar"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:src="@drawable/calendar" />
+
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:text="Date of Birth: " />
-                <TextView
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/_15sdp"
-                    android:layout_gravity="end"
-                    android:id="@+id/Gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:text="Gender: " />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-                <EditText
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/EditText_email"
-                    android:editable="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="Email" />
-                <EditText
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/EditText_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="Name" />
-                <EditText
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/EditText_dob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="date"
-                    android:hint="mm/dd/yyy" />
-                <EditText
-                    android:textSize="@dimen/_15sdp"
-                    android:id="@+id/EditText_Gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="Gender" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/Gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Gender: "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/rbgroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <RadioButton
+                                android:id="@+id/rbMale"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Male"/>
+                            <RadioButton
+                                android:id="@+id/rbFemale"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Female"/>
+                        </RadioGroup>
+
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
         <Button
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_gravity="center"
             android:id="@+id/Register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:text="Register" />
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

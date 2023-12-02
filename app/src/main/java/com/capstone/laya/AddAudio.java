@@ -229,8 +229,6 @@ public class AddAudio extends AppCompatActivity {
         });
         AudioRecorderDialog.show();
     }
-
-
     private void showTTSDialog() {
         LayoutInflater inflater = LayoutInflater.from(AddAudio.this);
         View dialogview = inflater.inflate(R.layout.dialog, null);
@@ -304,12 +302,10 @@ public class AddAudio extends AppCompatActivity {
                         i.putExtra("Category", category);
                         startActivity(i);
                         finish();
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
                     }
                 });
             }else {

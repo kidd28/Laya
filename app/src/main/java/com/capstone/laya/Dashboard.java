@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -72,7 +73,6 @@ import java.util.concurrent.TimeUnit;
 public class Dashboard extends AppCompatActivity {
     FirebaseDatabase database;
     private static final int STORAGE_PERMISSION_CODE = 23;
-    private static final int REQUEST_STORAGE_PERMISSION = 101;
     DatabaseReference reference;
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -83,21 +83,18 @@ public class Dashboard extends AppCompatActivity {
     StorageReference storageRef;
     private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
-    float actVolume, maxVolume, volume;
     ArrayList<AudioModel> audioModels;
     RecyclerView rv;
     SelectedAudioAdapter audioAdapter;
 
-    SoundPool soundPool;
     int count = 0;
     boolean play;
-    int soundId;
     boolean loaded;
-    AudioManager audioManager;
 
     ProgressDialog progressDialog;
     MediaPlayer mp;
     MediaPlayer mp2;
+    TextView hellouser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +113,7 @@ public class Dashboard extends AppCompatActivity {
         setting = findViewById(R.id.setting);
         rotate = findViewById(R.id.rotate);
         rv = findViewById(R.id.rv);
+        hellouser = findViewById(R.id.hellouser);
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -123,6 +121,7 @@ public class Dashboard extends AppCompatActivity {
 
 
 
+        hellouser.setText("Hello "+ getFirstName(user.getDisplayName()));
         loaded = false;
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Initializing AAC, please wait..");
@@ -163,7 +162,6 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Dashboard.this, Settings.class));
-                finish();
             }
         });
 
@@ -187,7 +185,12 @@ public class Dashboard extends AppCompatActivity {
         }
 
     }
+    public static String getFirstName(String fullName) {
+        String surname = fullName.substring(0, fullName.indexOf(' '));
+        surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
 
+        return surname;
+    }
     public boolean checkStoragePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Android is 11 (R) or above
@@ -472,5 +475,4 @@ public class Dashboard extends AppCompatActivity {
             }
         }
     }
-
 }

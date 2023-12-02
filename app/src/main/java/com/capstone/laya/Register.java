@@ -3,11 +3,17 @@ package com.capstone.laya;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,15 +23,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Register extends AppCompatActivity {
-    EditText email;
-    EditText name;
-    EditText dob;
-    EditText gender;
+public class Register extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+    EditText  name,dob;
     Button register;
+    TextView email;
 
     FirebaseDatabase database;
     FirebaseAuth mAuth;
@@ -34,6 +40,8 @@ public class Register extends AppCompatActivity {
 
     String Email, Name, Dob, Gender, uid;
 
+    ImageView calendar;
+    RadioButton rbMale, rbFemale;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +50,10 @@ public class Register extends AppCompatActivity {
         email = findViewById(R.id.EditText_email);
         name = findViewById(R.id.EditText_name);
         dob = findViewById(R.id.EditText_dob);
-        gender = findViewById(R.id.EditText_Gender);
+        calendar = findViewById(R.id.calendar);
         register = findViewById(R.id.Register);
+        rbMale = findViewById(R.id.rbMale);
+        rbFemale = findViewById(R.id.rbFemale);
 
         Email = getIntent().getStringExtra("email");
         Name = getIntent().getStringExtra("name").toUpperCase(Locale.ROOT);
@@ -57,16 +67,44 @@ public class Register extends AppCompatActivity {
         email.setText(Email);
         name.setText(Name);
 
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                com.capstone.laya.DatePicker datePicker;
+                datePicker = new com.capstone.laya.DatePicker();
+                datePicker.show(getSupportFragmentManager(), "DATE PICK");
+            }
+        });
+        dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                com.capstone.laya.DatePicker datePicker;
+                datePicker = new com.capstone.laya.DatePicker();
+                datePicker.show(getSupportFragmentManager(), "DATE PICK");
+            }
+        });
+
+        rbMale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Gender = "Male";
+            }
+        });
+        rbFemale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Gender = "Female";
+            }
+        });
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dob = dob.getText().toString().trim();
-                Gender = dob.getText().toString().trim();
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("Email", Email);
+                hashMap.put("Email", user.getEmail());
                 hashMap.put("Uid", uid);
-                hashMap.put("Name", Name);
+                hashMap.put("Name", user.getDisplayName());
                 hashMap.put("DateOfBirth", Dob);
                 hashMap.put("Gender", Gender);
                 reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -86,7 +124,15 @@ public class Register extends AppCompatActivity {
                 });
             }
         });
-
-
+    }
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String selectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(mCalendar.getTime());
+        Dob = selectedDate;
+        dob.setText(selectedDate);
     }
 }
