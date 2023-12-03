@@ -126,7 +126,7 @@ public class ParentalAccess extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(ParentalAccess.this, Dashboard.class));
+        startActivity(new Intent(ParentalAccess.this, Settings.class));
         finish();
     }
 }
