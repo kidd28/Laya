@@ -234,7 +234,7 @@ public class AddAudio extends AppCompatActivity {
         View dialogview = inflater.inflate(R.layout.dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(AddAudio.this)
                 .setView(dialogview)
-                .setTitle("Type the wrod")
+                .setTitle("Input AAC word")
                 .setPositiveButton("Save", null) //Set to null. We override the onclick
                 .setNegativeButton("Cancel", null)
                 .setNeutralButton("Play", null)

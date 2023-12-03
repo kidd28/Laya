@@ -2,6 +2,7 @@ package com.capstone.laya;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int RC_SIGN_IN = 100;
-    Button Login;
+    CardView Login;
 
     FirebaseAuth mAuth;
     FirebaseUser user;

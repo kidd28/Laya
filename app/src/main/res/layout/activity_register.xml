@@ -6,105 +6,146 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    tools:context=".Register">
+    tools:context=".Register"
+    android:background="@color/primaryblue">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:gravity="center"
         android:orientation="vertical">
-        <LinearLayout
+
+        <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:fontFamily="@font/handosoftbold"
+            android:text="Let's create a profile!"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Email: "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:gravity="center">
+<!--                    <TextView-->
+<!--                        android:id="@+id/email"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="end"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:text="Email: "-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="@dimen/_15sdp"-->
+<!--                        android:fontFamily="@font/handosoftbold"/>-->
                     <TextView
                         android:id="@+id/EditText_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_gravity="center_vertical"
+                        android:ems="13"
+                        android:fontFamily="@font/handosoftbold"
                         android:hint="Email"
-                        android:minLines="1"
                         android:inputType="textEmailAddress|textMultiLine"
-                        android:textSize="@dimen/_18sdp"
+                        android:minLines="1"
+                        android:scrollbars="vertical"
                         android:scrollHorizontally="false"
-                        android:scrollbars="vertical"/>
+                        android:textColor="#F3F3F3"
+                        android:textColorHint="#F3F3F3"
+                        android:textSize="@dimen/_15sdp"
+                        tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Name: "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/_10sdp">
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/name"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center"-->
+                    <!--                        android:text="Name: "-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:fontFamily="@font/handosoftbold"-->
+                    <!--                        android:textSize="@dimen/_15sdp" />-->
                     <EditText
                         android:id="@+id/EditText_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="13"
-                        android:hint="Name"
+                        android:backgroundTint="@color/white"
+                        android:ems="15"
+                        android:fontFamily="@font/handosoftbold"
+                        android:hint="What should we call you?"
                         android:inputType="text"
-                        android:textSize="@dimen/_15sdp" />
+                        android:textColor="@color/white"
+                        android:textColorHint="#F3F3F3"
+                        android:textSize="@dimen/_14sdp"
+                        tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/DateOfBirth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Date of Birth: "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/DateOfBirth"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center"-->
+                    <!--                        android:layout_weight="1"-->
+                    <!--                        android:gravity="center_vertical"-->
+                    <!--                        android:text="Date of Birth: "-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:fontFamily="@font/handosoftbold"-->
+                    <!--                        android:textSize="@dimen/_15sdp" />-->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="@dimen/_10sdp">
 
                         <EditText
                             android:id="@+id/EditText_dob"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:ems="8"
+                            android:backgroundTint="@color/white"
+                            android:ems="13"
                             android:focusable="false"
-                            android:hint="e.g. Jan 12, 1952"
+                            android:fontFamily="@font/handosoftbold"
+                            android:hint="Select your birthday"
                             android:inputType="date"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textColor="@color/white"
+                            android:textColorHint="#F3F3F3"
+                            android:textSize="@dimen/_14sdp"
+                            tools:ignore="TouchTargetSizeCheck" />
 
                         <ImageView
                             android:id="@+id/calendar"
-                            android:layout_width="@dimen/_30sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:src="@drawable/calendar" />
+                            android:layout_width="@dimen/_23sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_height="@dimen/_23sdp"
+                            android:src="@drawable/calendaricon" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -112,21 +153,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/Gender"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="Gender: "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/Gender"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:text="Gender: "-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:textSize="@dimen/_18sdp" />-->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_horizontal">
                         <RadioGroup
                             android:id="@+id/rbgroup"
                             android:layout_width="wrap_content"
@@ -136,27 +177,46 @@
                                 android:id="@+id/rbMale"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Male"/>
+                                android:text="Male"
+                                android:fontFamily="@font/handosoftbold"
+                                android:textColor="@color/white"
+                                android:buttonTint="@color/white"
+                                android:layout_marginRight="@dimen/_10sdp" />
                             <RadioButton
                                 android:id="@+id/rbFemale"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Female"/>
+                                android:text="Female"
+                                android:fontFamily="@font/handosoftbold"
+                                android:textColor="@color/white"
+                                android:buttonTint="@color/white"/>
                         </RadioGroup>
-
-
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <Button
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/Register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="Register" />
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            app:cardCornerRadius="@dimen/_15sdp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/handosoftbold"
+                android:text="Confirm"
+                android:textColor="@color/fontblue"
+                android:textSize="@dimen/_13sdp" />
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

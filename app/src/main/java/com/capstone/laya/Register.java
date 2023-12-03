@@ -2,6 +2,7 @@ package com.capstone.laya;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -30,7 +31,7 @@ import java.util.Locale;
 
 public class Register extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     EditText  name,dob;
-    Button register;
+    CardView register;
     TextView email;
 
     FirebaseDatabase database;

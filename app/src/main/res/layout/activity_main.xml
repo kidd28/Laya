@@ -7,48 +7,78 @@
     android:layout_gravity="center"
     tools:context=".MainActivity">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/gif"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="@dimen/_200sdp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_90sdp"
-        android:src="@drawable/kidkite" />
-
-    <TextView
-        android:id="@+id/welcome"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/handosoftbold"
-        android:text="Welcome"
-        android:textColor="@color/fontblue"
-        android:textSize="@dimen/_35sdp"
-        android:layout_below="@id/gif"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_60sdp"/>
+        android:id="@+id/rel1"
+        android:layout_centerHorizontal="true">
 
-    <TextView
-        android:id="@+id/subtext"
-        android:layout_width="wrap_content"
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_90sdp"
+            android:src="@drawable/kidkite" />
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/handosoftbold"
+            android:text="Welcome"
+            android:textColor="@color/fontblue"
+            android:textSize="@dimen/_35sdp"
+            android:layout_below="@id/gif"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_60sdp"/>
+
+        <TextView
+            android:id="@+id/subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/handosoftbold"
+            android:text="Let's get talking!"
+            android:textColor="@color/fontblue"
+            android:textSize="@dimen/_16sdp"
+            android:layout_below="@id/welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_7sdp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rel2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/handosoftbold"
-        android:text="Let's get talking!"
-        android:textColor="@color/fontblue"
-        android:textSize="@dimen/_16sdp"
-        android:layout_below="@id/welcome"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_7sdp"/>
+        android:layout_below="@id/rel1"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/_35sdp">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/_30sdp"
+            android:layout_marginRight="@dimen/_30sdp"
+            android:backgroundTint="@color/primaryblue"
+            app:cardCornerRadius="@dimen/_22sdp"
+            app:cardElevation="0dp">
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:backgroundTint="@color/primaryblue"
-        android:text="Login" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/handosoftbold"
+                android:text="Get Started"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp" />
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
 
 
 

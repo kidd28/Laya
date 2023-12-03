@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearback"
-        android:layout_marginTop="@dimen/_13sdp">
+        android:layout_marginTop="@dimen/_13sdp"
+        android:layout_marginBottom="@dimen/_15sdp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/pfp"
@@ -82,9 +83,10 @@
         android:layout_height="@dimen/_38sdp"
         android:layout_below="@id/relprofile"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_13sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_30sdp"
-        app:cardCornerRadius="@dimen/_8sdp">
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:cardElevation="0dp">
 
     <TextView
             android:layout_width="wrap_content"
