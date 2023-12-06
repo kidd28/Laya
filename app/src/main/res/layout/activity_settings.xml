@@ -36,7 +36,6 @@
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/_28sdp"
-            android:src="@drawable/luffy"
             app:civ_border_color="@color/white"
             app:civ_border_width="@dimen/_3sdp"
             tools:ignore="MissingClass" />
@@ -272,11 +271,17 @@
 
             </LinearLayout>
 
-
-
         </LinearLayout>
 
 
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:text="Log out"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            />
     </RelativeLayout>
 
 

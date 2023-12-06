@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
 
 
-
         mAuth = FirebaseAuth.getInstance();// Initialize Firebase Auth
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("uid", user1.getUid());//send uid value in next activity
                                 intent.putExtra("name", account.getDisplayName().substring(0, 1).toUpperCase() + account.getDisplayName().substring(1).toLowerCase());//send name value in next activity
                                 startActivity(intent);
-                                MainActivity.this.finish();
+                                finish();
                             } else {
                                 //if existing user
                                 progressDialog.show(); // Display Progress Dialog
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent i = new Intent(MainActivity.this, Dashboard.class);
                                 i.putExtra("Welcome", "Welcome!");
                                 startActivity(i);
-                                MainActivity.this.finish();
+                                finish();
                             }
                         } else {
                             // If sign in fails, display a message to the user.
@@ -127,14 +126,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         progressDialog.show();
         if (user != null) {
             user.reload();
             progressDialog.cancel();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
-            MainActivity.this.finish();
+            finish();
         } else {
             progressDialog.cancel();
         }

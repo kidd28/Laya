@@ -73,6 +73,7 @@ import java.util.concurrent.TimeUnit;
 public class Dashboard extends AppCompatActivity {
     FirebaseDatabase database;
     private static final int STORAGE_PERMISSION_CODE = 23;
+    private static final int STORAGE_PERMISSION_CODE11 = 24;
     DatabaseReference reference;
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -120,8 +121,8 @@ public class Dashboard extends AppCompatActivity {
         reference = database.getReference("Users");
 
 
+        getUserName();
 
-        hellouser.setText("Hello "+ getFirstName(user.getDisplayName()));
         loaded = false;
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Initializing AAC, please wait..");
@@ -186,10 +187,14 @@ public class Dashboard extends AppCompatActivity {
 
     }
     public static String getFirstName(String fullName) {
-        String surname = fullName.substring(0, fullName.indexOf(' '));
-        surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
-
-        return surname;
+        String surname;
+        try{
+             surname = fullName.substring(0, fullName.indexOf(' '));
+            surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+            return surname;
+        }catch (Exception e){
+            return fullName;
+        }
     }
     public boolean checkStoragePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -207,16 +212,18 @@ public class Dashboard extends AppCompatActivity {
     private void requestForStoragePermissions() {
         //Android is 11 (R) or above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-                intent.setData(uri);
-                storageActivityResultLauncher.launch(intent);
-            } catch (Exception e) {
-                Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                storageActivityResultLauncher.launch(intent);
+            // If you have access to the external storage, do whatever you need
+            if (Environment.isExternalStorageManager()){
+                download();
+            }else{
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                        },
+                        STORAGE_PERMISSION_CODE11
+                );
             }
         } else {
             //Below android 11
@@ -231,27 +238,6 @@ public class Dashboard extends AppCompatActivity {
         }
 
     }
-
-    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>() {
-                        @Override
-                        public void onActivityResult(ActivityResult o) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                //Android is 11 (R) or above
-                                if (Environment.isExternalStorageManager()) {
-                                    download();
-                                    //Manage External Storage Permissions Granted
-                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
-                                } else {
-                                    Toast.makeText(Dashboard.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                //Below android 11
-
-                            }
-                        }
-                    });
 
     private void speak() {
         mp = new MediaPlayer();
@@ -336,7 +322,6 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
-
     public void additem(String id, String category) {
         System.out.println(id);
         System.out.println(category);
@@ -379,7 +364,6 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
-
     private void revokeAccess() {
         mGoogleSignInClient.revokeAccess().addOnCompleteListener(Dashboard.this, new OnCompleteListener<Void>() {
             @Override
@@ -387,7 +371,6 @@ public class Dashboard extends AppCompatActivity {
             }
         });
     }
-
 
     private void download() {
         progressDialog.show();
@@ -473,6 +456,37 @@ public class Dashboard extends AppCompatActivity {
                     Toast.makeText(Dashboard.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
                 }
             }
+        }else if(requestCode == STORAGE_PERMISSION_CODE11) {
+            if (grantResults.length > 0) {
+                try {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                    startActivityForResult(intent, 2296);
+                    download();
+                } catch (Exception e) {
+                    Intent intent = new Intent();
+                    intent.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivityForResult(intent, 2296);
+                }
+            }
         }
+
     }
+
+    public void getUserName() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+               String Name = ""+snapshot.child("Name").getValue();
+               hellouser.setText("Hello "+ getFirstName(Name));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+ }
 }

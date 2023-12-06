@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.capstone.laya.Adapter.ParentCategoryAdapter;
+import com.capstone.laya.Model.CategoriesModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -38,7 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings extends AppCompatActivity {
     FirebaseUser user;
-    Button signout;
+    Button logout;
+    GoogleSignInClient mGoogleSignInClient;
 
     CardView parentalacess;
     TextView name, email;
@@ -53,6 +57,7 @@ public class Settings extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         pfp = findViewById(R.id.pfp);
+        logout = findViewById(R.id.logout);
         parentalacess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,16 +65,53 @@ public class Settings extends AppCompatActivity {
                 finish();
             }
         });
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
+        mGoogleSignInClient = GoogleSignIn.getClient(Settings.this, gso);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(Settings.this)
+                        .setTitle("Log out")
+                        .setMessage("Are you sure you want to exit?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                revokeAccess();
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(Settings.this, MainActivity.class));
+                                finish();
+                            }
+                        }).create().show();
+            }
+        });
         user = FirebaseAuth.getInstance().getCurrentUser();
-
 
         loadUserprofile();
     }
 
     private void loadUserprofile() {
-        Glide.with(this).load(user.getPhotoUrl()).into(pfp);
-        name.setText(user.getDisplayName());
-        email.setText(user.getEmail());
+        Glide.with(Settings.this).load(user.getPhotoUrl()).into(pfp);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String Name = ""+snapshot.child("Name").getValue();
+                String Email = ""+snapshot.child("Email").getValue();
+                name.setText(Name);
+                email.setText(Email);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess().addOnCompleteListener(Settings.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
     }
 }

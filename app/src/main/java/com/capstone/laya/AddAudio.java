@@ -106,7 +106,6 @@ public class AddAudio extends AppCompatActivity {
 
         textToSpeechHelper = new TextToSpeechHelper(AddAudio.this, "Add");
 
-
         storageReference = storage.getReference().child("Audio Added by User").child(user.getUid());
 
         category = getIntent().getExtras().getString("Category");
@@ -128,13 +127,16 @@ public class AddAudio extends AppCompatActivity {
                                     ActivityCompat.requestPermissions(AddAudio.this,
                                             new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                             REQUEST_STORAGE_PERMISSION);
-                                }else {
+                                } else {
                                     pickAudio();
                                 }
                                 break;
                             case 1:
                                 if (ContextCompat.checkSelfPermission(AddAudio.this, RECORD_AUDIO)
-                                        != PackageManager.PERMISSION_GRANTED) {
+                                        != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(AddAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED ||
+                                        ContextCompat.checkSelfPermission(AddAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                != PackageManager.PERMISSION_GRANTED) {
                                     ActivityCompat.requestPermissions(AddAudio.this, new String[]{RECORD_AUDIO},
                                             REQUEST_AUDIO_PERMISSION);
                                 } else {
@@ -145,8 +147,8 @@ public class AddAudio extends AppCompatActivity {
                                         ActivityCompat.requestPermissions(AddAudio.this,
                                                 new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                                 REQUEST_STORAGE_PERMISSION);
-                                    }else {
-                                            showRecorder();
+                                    } else {
+                                        showRecorder();
                                     }
                                 }
                                 break;
@@ -186,12 +188,12 @@ public class AddAudio extends AppCompatActivity {
         });
     }
 
-    private void showRecorder(){
+    private void showRecorder() {
         LayoutInflater factory = LayoutInflater.from(AddAudio.this);
         final View audiorecorder = factory.inflate(R.layout.audiorecorder, null);
         final AlertDialog AudioRecorderDialog = new AlertDialog.Builder(AddAudio.this).create();
         AudioRecorderDialog.setView(audiorecorder);
-        Button save= audiorecorder.findViewById(R.id.upload);
+        Button save = audiorecorder.findViewById(R.id.upload);
         EditText filename = audiorecorder.findViewById(R.id.filename);
 
         recordView = audiorecorder.findViewById(R.id.recordView);
@@ -207,13 +209,13 @@ public class AddAudio extends AppCompatActivity {
                         String fname = file.getName();
                         Uri recordedUri = Uri.fromFile(file);
                         System.out.println(fname);
-                        if(!filename.getText().toString().equals("")){
-                            FileName = filename.getText().toString()+".mp3";
+                        if (!filename.getText().toString().equals("")) {
+                            FileName = filename.getText().toString() + ".mp3";
                             audioname.setText(FileName);
                             uploadAudio(recordedUri, FileName);
                             AudioRecorderDialog.dismiss();
-                        }else{
-                            Toast.makeText(AddAudio.this, "Please enter file name",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AddAudio.this, "Please enter file name", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -229,9 +231,10 @@ public class AddAudio extends AppCompatActivity {
         });
         AudioRecorderDialog.show();
     }
+
     private void showTTSDialog() {
         LayoutInflater inflater = LayoutInflater.from(AddAudio.this);
-        View dialogview = inflater.inflate(R.layout.dialog, null);
+        View dialogview = inflater.inflate(R.layout.ttsdialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(AddAudio.this)
                 .setView(dialogview)
                 .setTitle("Input AAC word")
@@ -249,11 +252,12 @@ public class AddAudio extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         //What ever you want to do with the value
-                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etTTS);
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
+                        TTS = TTS.replaceAll("[^a-zA-Z0-9]", " ");
 
-                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Save");
+                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Save");
                         dialog.dismiss();
                     }
                 });
@@ -270,10 +274,11 @@ public class AddAudio extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
-                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etTTS);
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
-                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play");
+                        TTS = TTS.replaceAll("[^a-zA-Z0-9]", " ");
+                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Play");
                     }
                 });
             }
@@ -284,8 +289,8 @@ public class AddAudio extends AppCompatActivity {
 
     private void save() {
         String id = String.valueOf(System.currentTimeMillis());
-        if(name.getText().toString()!=null && !name.getText().toString().equals("")){
-            if(category!= null && FileName!= null && AudioLink != null&& ImageLink != null){
+        if (name.getText().toString() != null && !name.getText().toString().equals("")) {
+            if (category != null && FileName != null && AudioLink != null && ImageLink != null) {
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("Name", name.getText().toString());
@@ -297,7 +302,7 @@ public class AddAudio extends AppCompatActivity {
                 reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                      //  Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
                         i.putExtra("Category", category);
                         startActivity(i);
@@ -308,10 +313,10 @@ public class AddAudio extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                     }
                 });
-            }else {
+            } else {
                 Toast.makeText(AddAudio.this, "Please add image or audio", Toast.LENGTH_SHORT).show();
             }
-        }else {
+        } else {
             Toast.makeText(AddAudio.this, "Please enter AAC Name", Toast.LENGTH_SHORT).show();
         }
     }
@@ -403,7 +408,7 @@ public class AddAudio extends AppCompatActivity {
                 });
     }
 
-    public void uploadAduioFromTTS(Uri audioUri, String filename){
+    public void uploadAduioFromTTS(Uri audioUri, String filename) {
         String AudioId = String.valueOf(System.currentTimeMillis());
         audioname.setText(filename + ".mp3");
         ProgressDialog progressDialog = new ProgressDialog(this);
@@ -426,7 +431,7 @@ public class AddAudio extends AppCompatActivity {
                 }
             }
         });
-        }
+    }
 
     public String getPath(Context context, Uri uri) throws URISyntaxException {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
@@ -505,13 +510,13 @@ public class AddAudio extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Storage permissions granted",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Storage permissions granted", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Storage permissions denied",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Storage permissions denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -520,16 +525,25 @@ public class AddAudio extends AppCompatActivity {
                     boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                        Toast.makeText(this, "Storage permissions granted",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Storage permissions granted", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Storage permissions denied",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Storage permissions denied", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
             case REQUEST_AUDIO_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Audio permission granted", Toast.LENGTH_SHORT).show();
-
+                    if (ContextCompat.checkSelfPermission(AddAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(AddAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(AddAudio.this,
+                                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_STORAGE_PERMISSION);
+                    } else {
+                        showRecorder();
+                    }
                 } else {
                     Toast.makeText(this, "Audio permission denied", Toast.LENGTH_SHORT).show();
                 }
@@ -541,12 +555,13 @@ public class AddAudio extends AppCompatActivity {
         Intent pickAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
     }
+
     private void requestPermissionforDR() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             try {
                 Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
                 startActivityForResult(intent, 2296);
             } catch (Exception e) {
                 Intent intent = new Intent();
@@ -558,6 +573,7 @@ public class AddAudio extends AppCompatActivity {
             ActivityCompat.requestPermissions(AddAudio.this, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
     }
+
     private boolean checkPermissionForDir() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             return Environment.isExternalStorageManager();
@@ -567,6 +583,7 @@ public class AddAudio extends AppCompatActivity {
             return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

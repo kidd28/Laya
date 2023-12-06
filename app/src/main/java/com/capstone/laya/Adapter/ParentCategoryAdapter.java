@@ -150,6 +150,7 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                         }
                                     }
                                 }
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {

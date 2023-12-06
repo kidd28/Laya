@@ -17,8 +17,13 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +40,8 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
     TextView email;
 
     FirebaseDatabase database;
+    GoogleSignInClient mGoogleSignInClient;
+
     FirebaseAuth mAuth;
     FirebaseUser user;
     DatabaseReference reference;
@@ -67,6 +74,9 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
 
         email.setText(Email);
         name.setText(Name);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(Register.this, gso);
 
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,28 +111,34 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("Email", user.getEmail());
-                hashMap.put("Uid", uid);
-                hashMap.put("Name", user.getDisplayName());
-                hashMap.put("DateOfBirth", Dob);
-                hashMap.put("Gender", Gender);
-                reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        user.reload();
-                        Toast.makeText(Register.this, "Registration complete!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Register.this, SelectLanguage.class);
-                        startActivity(intent);
-                        Register.this.finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                if(Dob != null && Name != null && !name.getText().toString().equals("") && Gender!= null){
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("Email", user.getEmail());
+                    hashMap.put("Uid", uid);
+                    hashMap.put("Name", name.getText().toString());
+                    hashMap.put("DateOfBirth", Dob);
+                    hashMap.put("Gender", Gender);
+                    reference.child(user.getUid()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            user.reload();
+                            Toast.makeText(Register.this, "Registration complete!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Register.this, SelectLanguage.class);
+                            startActivity(intent);
+                            Register.this.finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    Toast.makeText(Register.this, "Please complete the field above!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -135,5 +151,31 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         String selectedDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(mCalendar.getTime());
         Dob = selectedDate;
         dob.setText(selectedDate);
+    }
+
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess().addOnCompleteListener(Register.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child("Users").child(user.getUid());
+        ref.removeValue();
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Register.this, "Registration Cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        revokeAccess();
     }
 }
