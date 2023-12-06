@@ -6,7 +6,7 @@
     tools:context=".fragments.AudioFragment"
     android:layout_marginTop="@dimen/_45sdp"
     android:background="@drawable/topleft_topright_radius"
-    android:backgroundTint="@color/pastelblue">
+    android:backgroundTint="#F4F5F6">
 
 
     <LinearLayout

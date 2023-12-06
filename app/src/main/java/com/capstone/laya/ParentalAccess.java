@@ -78,6 +78,13 @@ public class ParentalAccess extends AppCompatActivity {
                 finish();
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ParentalAccess.this, Settings.class));
+                finish();
+            }
+        });
     }
 
     private void loadCategoriesAddedbyUser() {

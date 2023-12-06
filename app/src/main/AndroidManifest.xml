@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission
@@ -25,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Laya"
         tools:targetApi="31">
+        <activity
+            android:name=".Account"
+            android:exported="false" />
         <activity
             android:name=".EditCategory"
             android:exported="false" />
@@ -64,7 +67,7 @@
             android:exported="true" />
         <activity
             android:name=".ParentalAccess"
-             android:exported="true" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />

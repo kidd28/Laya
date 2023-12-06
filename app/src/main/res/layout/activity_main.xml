@@ -62,7 +62,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/_30sdp"
             android:layout_marginRight="@dimen/_30sdp"
-            android:backgroundTint="@color/primaryblue"
+            android:backgroundTint="@color/fontblue"
             app:cardCornerRadius="@dimen/_22sdp"
             app:cardElevation="0dp">
 

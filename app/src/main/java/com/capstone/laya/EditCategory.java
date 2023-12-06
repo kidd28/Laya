@@ -40,9 +40,9 @@ import java.util.UUID;
 public class EditCategory extends AppCompatActivity {
 
     String ImageLink, CategoryName;
-    Button uploadImg, upload;
+    Button uploadImg;
     EditText categoryName;
-    ImageView image;
+    ImageView image, upload, back;
 
     private final int PICK_IMAGE_REQUEST = 22;
 
@@ -63,6 +63,7 @@ public class EditCategory extends AppCompatActivity {
         uploadImg = findViewById(R.id.uploadImage);
         categoryName = findViewById(R.id.EditText);
         image = findViewById(R.id.CatgoryImage);
+        back = findViewById(R.id.back);
 
 
         storage = FirebaseStorage.getInstance();
@@ -94,6 +95,14 @@ public class EditCategory extends AppCompatActivity {
                     SaveNew();
                 }
 
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(EditCategory.this, ParentalAccess.class));
+                finish();
             }
         });
 

@@ -34,9 +34,9 @@ import java.util.UUID;
 
 public class AddCategory extends AppCompatActivity {
 
-    Button uploadImg, upload;
+    Button uploadImg;
     EditText categoryName;
-    ImageView image;
+    ImageView image, upload, back;
     private final int PICK_IMAGE_REQUEST = 22;
 
     private Uri filePath;
@@ -58,6 +58,7 @@ public class AddCategory extends AppCompatActivity {
         uploadImg = findViewById(R.id.uploadImage);
         categoryName = findViewById(R.id.EditText);
         image = findViewById(R.id.CatgoryImage);
+        back = findViewById(R.id.back);
 
 
         storage = FirebaseStorage.getInstance();
@@ -82,6 +83,13 @@ public class AddCategory extends AppCompatActivity {
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AddCategory.this, ParentalAccess.class));
+                finish();
+            }
+        });
 
     }
 

@@ -63,8 +63,8 @@ public class EditAudio extends AppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 101;
     private static final int REQUEST_AUDIO_PERMISSION = 102;
     private static final int PERMISSION_REQUEST_CODE = 1;
-    Button uploadAudio, uploadImage, upload;
-    ImageView AudioImage;
+    Button uploadAudio, uploadImage;
+    ImageView AudioImage, upload;
     TextView audioname;
 
     EditText name;
@@ -428,7 +428,7 @@ public class EditAudio extends AppCompatActivity {
         View dialogview = inflater.inflate(R.layout.dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(EditAudio.this)
                 .setView(dialogview)
-                .setTitle("Type the wrod")
+                .setTitle("Input new AAC word")
                 .setPositiveButton("Save", null) //Set to null. We override the onclick
                 .setNegativeButton("Cancel", null)
                 .setNeutralButton("Play", null)

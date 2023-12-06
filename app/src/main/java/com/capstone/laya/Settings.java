@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +46,10 @@ public class Settings extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     CardView parentalacess;
-    TextView name, email;
+    TextView name, email, account, ttsvoice, passcode, feedback, about;
     CircleImageView pfp;
+
+    ImageView backwhite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +57,34 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         parentalacess = findViewById(R.id.parentalaccess);
+        backwhite = findViewById(R.id.backwhite);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         pfp = findViewById(R.id.pfp);
         logout = findViewById(R.id.logout);
+        account = findViewById(R.id.account);
+        ttsvoice = findViewById(R.id.ttsvoice);
+        passcode = findViewById(R.id.passcode);
+        feedback = findViewById(R.id.feedback);
+        about = findViewById(R.id.about);
         parentalacess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.this, ParentalAccess.class));
+                finish();
+            }
+        });
+        account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this, Account.class));
+                finish();
+            }
+        });
+        backwhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this, Dashboard.class));
                 finish();
             }
         });
@@ -113,5 +136,11 @@ public class Settings extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(Settings.this, Dashboard.class));
+        finish();
     }
 }

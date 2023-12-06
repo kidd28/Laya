@@ -61,7 +61,8 @@ import pereira.agnaldo.audiorecorder.AudioRecorderView;
 
 public class AddAudio extends AppCompatActivity {
 
-    Button uploadAudio, uploadImage, upload;
+    Button uploadAudio, uploadImage;
+    ImageView upload;
     private static final int REQUEST_PICK_AUDIO = 2;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private final int PICK_IMAGE_REQUEST = 22;
