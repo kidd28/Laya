@@ -88,6 +88,10 @@ dependencies {
 
     implementation project(":audiorecorder")
 
+    implementation 'com.chaos.view:pinview:1.4.4'
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'

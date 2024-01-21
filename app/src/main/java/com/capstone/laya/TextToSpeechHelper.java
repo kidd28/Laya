@@ -209,7 +209,8 @@ public class TextToSpeechHelper {
                                     .setText(text))
                             .setVoice(VoiceSelectionParams.newBuilder()
                                     .setLanguageCode("fil-PH")
-                                    .setSsmlGender(SsmlVoiceGender.FEMALE))
+                                    .setSsmlGender(SsmlVoiceGender.FEMALE).setName(""))
+
                             .setAudioConfig(AudioConfig.newBuilder()
                                     .setAudioEncoding(AudioEncoding.MP3))
                             .build(),

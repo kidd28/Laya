@@ -26,6 +26,15 @@
         android:theme="@style/Theme.Laya"
         tools:targetApi="31">
         <activity
+            android:name=".CustomPinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SetupPasscode"
+            android:exported="false" />
+        <activity
+            android:name=".Passcode"
+            android:exported="false" />
+        <activity
             android:name=".Account"
             android:exported="false" />
         <activity

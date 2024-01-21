@@ -162,7 +162,9 @@ public class Dashboard extends AppCompatActivity {
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Dashboard.this, Settings.class));
+                Intent i = new Intent(Dashboard.this, Passcode.class);
+                i.putExtra("Intent", "Settings");
+                startActivity(i);
             }
         });
 

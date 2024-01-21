@@ -72,6 +72,7 @@
                 android:layout_marginBottom="@dimen/_10sdp"/>
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Name here"
@@ -95,6 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
+                android:id="@+id/email"
                 android:fontFamily="@font/handosoftbold"
                 android:textColorHint="#9F9F9F"
                 android:background="@drawable/box"

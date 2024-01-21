@@ -124,8 +124,8 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
                         @Override
                         public void onSuccess(Void unused) {
                             user.reload();
-                            Toast.makeText(Register.this, "Registration complete!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Register.this, Dashboard.class);
+                            Intent intent = new Intent(Register.this, SetupPasscode.class);
+                            intent.putExtra("Type", "New");
                             startActivity(intent);
                             Register.this.finish();
                         }

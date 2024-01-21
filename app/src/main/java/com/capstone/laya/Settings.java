@@ -81,6 +81,15 @@ public class Settings extends AppCompatActivity {
                 finish();
             }
         });
+        passcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Settings.this, Passcode.class);
+                i.putExtra("Intent","Passcode");
+                startActivity(i);
+                finish();
+            }
+        });
         backwhite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
