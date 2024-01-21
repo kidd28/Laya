@@ -209,17 +209,12 @@ public class TextToSpeechHelper {
                                     .setText(text))
                             .setVoice(VoiceSelectionParams.newBuilder()
                                     .setLanguageCode("fil-PH")
-                                    .setSsmlGender(SsmlVoiceGender.FEMALE).setName(""))
-
+                                    .setSsmlGender(SsmlVoiceGender.FEMALE))
                             .setAudioConfig(AudioConfig.newBuilder()
                                     .setAudioEncoding(AudioEncoding.MP3))
                             .build(),
                     mSynthesizeSpeechResponseObserver);
-
-
     }
-
-
 
     private final Runnable mFetchAccessTokenRunnable = new Runnable() {
         @Override

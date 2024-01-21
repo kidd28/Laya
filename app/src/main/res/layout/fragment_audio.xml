@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AudioFragment"
-    android:layout_marginTop="@dimen/_45sdp"
     android:background="@drawable/topleft_topright_radius"
-    android:backgroundTint="#F4F5F6">
+    android:backgroundTint="#F4F5F6"
+    tools:context=".fragments.AudioFragment">
 
 
     <LinearLayout
@@ -16,30 +16,49 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
 
             <ImageView
                 android:layout_width="@dimen/_11sdp"
                 android:layout_height="@dimen/_11sdp"
-                android:src="@drawable/back"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_25sdp"/>
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:src="@drawable/back" />
 
             <TextView
                 android:id="@+id/cat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_30sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:fontFamily="@font/handosoftbold"
                 android:gravity="center"
                 android:text="Category"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_23sdp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
+                android:textSize="@dimen/_23sdp" />
 
         </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_18sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_18sdp"
+            android:elevation="1dp"
+            app:cardCornerRadius="8dp">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/sv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                app:defaultQueryHint="Search AAC"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent" />
+        </androidx.cardview.widget.CardView>
 
 
         <androidx.recyclerview.widget.RecyclerView

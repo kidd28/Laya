@@ -3,10 +3,14 @@ package com.capstone.laya.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +45,8 @@ public class AudioFragment extends Fragment {
     ArrayList<AudioModel> audioModels;
     String category;
     FirebaseUser user;
+
+    SearchView sv;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,6 +94,7 @@ public class AudioFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_audio, container, false);
         rv = v.findViewById(R.id.rv);
         cat = v.findViewById(R.id.cat);
+        sv = v.findViewById(R.id.sv);
 
         audioModels = new ArrayList<>();
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -103,7 +110,35 @@ public class AudioFragment extends Fragment {
             cat.setText(category);
         }
         loadAudio();
-        loadAudioAddedbyUser();
+
+
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query.trim())){
+                    searchCat(query);
+                }else{
+                    loadAudio();
+                    loadAudioAddedbyUser();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText.trim())){
+                    searchCat(newText);
+                }else{
+                    loadAudio();
+                    loadAudioAddedbyUser();
+                }
+                return false;
+            }
+        });
+
+
+
+
         return v;
     }
 
@@ -142,6 +177,7 @@ public class AudioFragment extends Fragment {
                 }
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
+                    loadAudioAddedbyUser();
             }
 
             @Override
@@ -150,6 +186,64 @@ public class AudioFragment extends Fragment {
             }
         });
     }
+    private void searchCat(String query) {
+        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
+        audioModels = new ArrayList<>();
+        audioModels.clear();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+        reference.keepSynced(true);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds.child("Name").toString().toLowerCase().contains(query.toLowerCase())) {
+                        AudioModel model = ds.getValue(AudioModel.class);
+                        audioModels.add(model);
+                    }
+                }
+                AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                rv.setAdapter(audioAdapter);
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
+        reference.keepSynced(true);
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds.child("Name").toString().toLowerCase().contains(query.toLowerCase())) {
+                        AudioModel model = ds.getValue(AudioModel.class);
+                        audioModels.add(model);
+                    }
+                }
+                AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                rv.setAdapter(audioAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Fragment fragment = new CategoryFragment(); // replace your custom fragment class
+        Bundle bundle = new Bundle();
+        FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+        System.out.println(category);
+        bundle.putString("Category", category); // use as per your need
+        fragment.setArguments(bundle);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragmentView, fragment);
+        fragmentTransaction.commit();
+    }
 }

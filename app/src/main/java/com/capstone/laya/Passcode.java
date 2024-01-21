@@ -40,12 +40,21 @@ public class Passcode extends AppCompatActivity {
         pinView1 = findViewById(R.id.firstPinView);
         error = findViewById(R.id.error);
         confirm = findViewById(R.id.next);
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         nextintent = getIntent().getStringExtra("Intent");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                pin =snapshot.child("Pin").getValue().toString();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
