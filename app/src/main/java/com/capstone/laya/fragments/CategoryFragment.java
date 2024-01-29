@@ -95,6 +95,8 @@ public class CategoryFragment extends Fragment {
         rv.setLayoutManager(layoutManager);
 
         loadCategories();
+        loadCategoriesAddedbyUser();
+
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -122,6 +124,8 @@ public class CategoryFragment extends Fragment {
     }
 
     private void loadCategoriesAddedbyUser() {
+        categoriesModels.clear();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
@@ -143,6 +147,8 @@ public class CategoryFragment extends Fragment {
 
     }
     private void loadCategories() {
+        categoriesModels.clear();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory");
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
@@ -154,7 +160,6 @@ public class CategoryFragment extends Fragment {
                 }
                 CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
                 rv.setAdapter(categoriesAdapter);
-                loadCategoriesAddedbyUser();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -180,7 +185,6 @@ public class CategoryFragment extends Fragment {
                 }
                 CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
                 rv.setAdapter(categoriesAdapter);
-                loadCategoriesAddedbyUser();
             }
 
             @Override
@@ -201,7 +205,6 @@ public class CategoryFragment extends Fragment {
                 }
                 CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
                 rv.setAdapter(categoriesAdapter);
-                loadCategoriesAddedbyUser();
             }
 
             @Override

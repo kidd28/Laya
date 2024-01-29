@@ -1,11 +1,20 @@
 package com.capstone.laya.Model;
 
 public class CategoriesModel {
-    String Category,ImageLink;
+    String Category,ImageLink, Color;
     public CategoriesModel(){}
-    public CategoriesModel(String Category,String ImageLink){
+    public CategoriesModel(String Category,String ImageLink, String Color){
         this.Category = Category;
         this.ImageLink = ImageLink;
+        this.Color = Color;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
     }
 
     public String getImageLink() {

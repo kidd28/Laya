@@ -1,9 +1,15 @@
 package com.capstone.laya.fragments;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,6 +20,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.capstone.laya.Adapter.AudioAdapter;
@@ -47,6 +54,7 @@ public class AudioFragment extends Fragment {
     FirebaseUser user;
 
     SearchView sv;
+    RelativeLayout bg;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,6 +103,7 @@ public class AudioFragment extends Fragment {
         rv = v.findViewById(R.id.rv);
         cat = v.findViewById(R.id.cat);
         sv = v.findViewById(R.id.sv);
+        bg = v.findViewById(R.id.bg);
 
         audioModels = new ArrayList<>();
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -136,11 +145,46 @@ public class AudioFragment extends Fragment {
             }
         });
 
-
-
-
+        loadBgColor();
         return v;
     }
+
+    private void loadBgColor() {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid()).child(category);
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try{
+                        System.out.println(String.valueOf(snapshot.child("Color").getValue()));
+                        bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
+                    }catch(Exception ignored){}
+                  }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child(category);
+            reference1.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try{
+                        System.out.println(String.valueOf(snapshot.child("Color").getValue()));
+                        bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
+                    }catch(Exception ignored){}}
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+    }
+
+
 
     private void loadAudioAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
@@ -204,9 +248,7 @@ public class AudioFragment extends Fragment {
                 }
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }

@@ -2,6 +2,7 @@ package com.capstone.laya.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +47,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
         CategoriesModel categoriesModel = categoriesModels.get(position);
         String category = categoriesModel.getCategory();
         String img = categoriesModel.getImageLink();
+        String color = categoriesModel.getColor();
 
+
+        System.out.println(color);
         holder.text.setText(category);
+        holder.card.setCardBackgroundColor(Color.parseColor(color));
         Glide.with(context).load(img).centerCrop().into(holder.img);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +83,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
 
         public HolderAdapter(@NonNull View itemView) {
             super(itemView);
-
             img = itemView.findViewById(R.id.img);
             text = itemView.findViewById(R.id.name);
             card = itemView.findViewById(R.id.card);

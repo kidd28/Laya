@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/bg"
     android:background="@drawable/topleft_topright_radius"
-    android:backgroundTint="#F4F5F6"
     tools:context=".fragments.AudioFragment">
 
 

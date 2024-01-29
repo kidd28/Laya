@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,6 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.dhaval2404.colorpicker.ColorPickerDialog;
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog;
+import com.github.dhaval2404.colorpicker.listener.ColorListener;
+import com.github.dhaval2404.colorpicker.model.ColorShape;
+import com.github.dhaval2404.colorpicker.model.ColorSwatch;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -28,13 +34,15 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class AddCategory extends AppCompatActivity {
 
-    Button uploadImg;
+    Button uploadImg,colorPicker, materialColor;
     EditText categoryName;
     ImageView image, upload, back;
     private final int PICK_IMAGE_REQUEST = 22;
@@ -45,7 +53,7 @@ public class AddCategory extends AppCompatActivity {
 
     FirebaseStorage storage;
     StorageReference storageReference;
-    String categoryname;
+    String categoryname, Selectedcolor;
 
     FirebaseUser user;
 
@@ -59,6 +67,8 @@ public class AddCategory extends AppCompatActivity {
         categoryName = findViewById(R.id.EditText);
         image = findViewById(R.id.CatgoryImage);
         back = findViewById(R.id.back);
+        colorPicker = findViewById(R.id.colorPicker);
+        materialColor = findViewById(R.id.materialColor);
 
 
         storage = FirebaseStorage.getInstance();
@@ -91,6 +101,43 @@ public class AddCategory extends AppCompatActivity {
             }
         });
 
+
+        colorPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ColorPickerDialog
+                        .Builder(AddCategory.this)
+                        .setTitle("Pick Color")
+                        .setColorShape(ColorShape.SQAURE)
+                        .setDefaultColor(R.color.white)
+                        .setColorListener(new ColorListener() {
+                            @Override
+                            public void onColorSelected(int color, @NotNull String colorHex) {
+                                Selectedcolor = colorHex; // Handle Color Selection
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        materialColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialColorPickerDialog
+                        .Builder(AddCategory.this)
+                        .setTitle("Pick Color")
+                        .setColorShape(ColorShape.SQAURE)
+                        .setColorSwatch(ColorSwatch._300)
+                        .setDefaultColor(R.color.white)
+                        .setColorListener(new ColorListener() {
+                            @Override
+                            public void onColorSelected(int color, @NotNull String colorHex) {
+                                Selectedcolor = colorHex;
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private void SelectImage() {
@@ -147,6 +194,7 @@ public class AddCategory extends AppCompatActivity {
                                         HashMap<String, Object> hashMap = new HashMap<>();
                                         hashMap.put("Category", categoryName);
                                         hashMap.put("ImageLink", downloadUri);
+                                        hashMap.put("Color", Selectedcolor);
                                         reference.child(categoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {

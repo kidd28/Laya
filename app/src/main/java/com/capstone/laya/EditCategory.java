@@ -17,6 +17,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.dhaval2404.colorpicker.ColorPickerDialog;
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog;
+import com.github.dhaval2404.colorpicker.listener.ColorListener;
+import com.github.dhaval2404.colorpicker.model.ColorShape;
+import com.github.dhaval2404.colorpicker.model.ColorSwatch;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +37,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
@@ -40,7 +47,7 @@ import java.util.UUID;
 public class EditCategory extends AppCompatActivity {
 
     String ImageLink, CategoryName;
-    Button uploadImg;
+    Button uploadImg,colorPicker, materialColor;
     EditText categoryName;
     ImageView image, upload, back;
 
@@ -52,7 +59,7 @@ public class EditCategory extends AppCompatActivity {
 
     FirebaseStorage storage;
     StorageReference storageReference;
-    String categoryname;
+    String categoryname, Selectedcolor;
 
     FirebaseUser user;
     @Override
@@ -64,6 +71,8 @@ public class EditCategory extends AppCompatActivity {
         categoryName = findViewById(R.id.EditText);
         image = findViewById(R.id.CatgoryImage);
         back = findViewById(R.id.back);
+        colorPicker = findViewById(R.id.colorPicker);
+        materialColor = findViewById(R.id.materialColor);
 
 
         storage = FirebaseStorage.getInstance();
@@ -105,7 +114,42 @@ public class EditCategory extends AppCompatActivity {
                 finish();
             }
         });
+        colorPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ColorPickerDialog
+                        .Builder(EditCategory.this)
+                        .setTitle("Pick Color")
+                        .setColorShape(ColorShape.SQAURE)
+                        .setDefaultColor(R.color.white)
+                        .setColorListener(new ColorListener() {
+                            @Override
+                            public void onColorSelected(int color, @NotNull String colorHex) {
+                                Selectedcolor = colorHex; // Handle Color Selection
+                            }
+                        })
+                        .show();
+            }
+        });
 
+        materialColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialColorPickerDialog
+                        .Builder(EditCategory.this)
+                        .setTitle("Pick Color")
+                        .setColorShape(ColorShape.SQAURE)
+                        .setColorSwatch(ColorSwatch._300)
+                        .setDefaultColor(R.color.white)
+                        .setColorListener(new ColorListener() {
+                            @Override
+                            public void onColorSelected(int color, @NotNull String colorHex) {
+                                Selectedcolor = colorHex;
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private void Save() {
@@ -113,6 +157,7 @@ public class EditCategory extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Category", CategoryName);
         hashMap.put("ImageLink", ImageLink);
+        hashMap.put("Color", Selectedcolor);
         reference.child(CategoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -133,6 +178,7 @@ public class EditCategory extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Category", categoryName.getText().toString());
         hashMap.put("ImageLink", ImageLink);
+        hashMap.put("Color", Selectedcolor);
         reference.child(categoryName.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {

@@ -22,7 +22,6 @@
             android:layout_height="@dimen/_11sdp"
             android:layout_marginLeft="@dimen/_18sdp"
             android:src="@drawable/back"/>
-
         <TextView
             android:layout_gravity="center"
             android:id="@+id/tv"
@@ -62,6 +61,28 @@
             android:layout_marginStart="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_30sdp"
             android:hint="Enter category name" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/colorPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pick Color"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:fontFamily="@font/handosoftbold" />
+            <Button
+            android:id="@+id/materialColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Material Color"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/handosoftbold" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/uploadImage"
