@@ -87,7 +87,7 @@
         app:cardCornerRadius="@dimen/_8sdp"
         app:cardElevation="0dp">
 
-    <TextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Customize AAC"
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/_20sdp"
-                    android:src="@drawable/speaking" />
+                    android:src="@drawable/language" />
 
                 <TextView
                     android:id="@+id/ttsvoice"
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/handosoftbold"
                     android:gravity="center_vertical"
-                    android:text="Text-to-Speech Voice"
+                    android:text="Language"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
@@ -212,6 +212,33 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/_20sdp"
+                    android:src="@drawable/question_mark" />
+
+                <TextView
+                    android:id="@+id/how"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/handosoftbold"
+                    android:gravity="center_vertical"
+                    android:text="How to use"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/_17sdp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/_22sdp"
                     android:src="@drawable/feedback" />
 
                 <TextView
@@ -252,16 +279,47 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/_17sdp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:src="@drawable/signout" />
+
+                <TextView
+                    android:id="@+id/logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/handosoftbold"
+                    android:gravity="center_vertical"
+                    android:text="Sign Out"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:text="Log out" />
+        <!--        <Button-->
+        <!--            android:id="@+id/logout"-->
+        <!--            android:layout_width="@dimen/_100sdp"-->
+        <!--            android:layout_height="@dimen/_40sdp"-->
+        <!--            android:layout_alignParentBottom="true"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:fontFamily="@font/handosoftbold"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            android:textSize="@dimen/_14sdp"-->
+        <!--            android:padding="@dimen/_5sdp"-->
+        <!--            android:text="Sign out" />-->
+
     </RelativeLayout>
 
 

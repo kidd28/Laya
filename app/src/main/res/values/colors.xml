@@ -22,4 +22,16 @@
 
     <color name="teal_200">#80CBC4</color>
     <color name="teal_700">#00796B</color>
+
+    <array name="active">
+        <item>@color/pastelblue</item>
+        <item>@color/pastelgreen</item>
+        <item>@color/pastelviolet</item>
+    </array>
+
+    <array name="inactive">
+        <item>@color/pastelred</item>
+        <item>@color/pastelpink</item>
+        <item>@color/pastelorange</item>
+    </array>
 </resources>

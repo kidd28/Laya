@@ -42,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings extends AppCompatActivity {
     FirebaseUser user;
-    Button logout;
+    TextView logout;
     GoogleSignInClient mGoogleSignInClient;
 
     CardView parentalacess;

@@ -23,7 +23,7 @@ public class SplashScreen extends AppCompatActivity {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                startActivity(new Intent(SplashScreen.this, Onboarding.class));
                 finish();
             }
         }, secondsDelayed * 5000);
