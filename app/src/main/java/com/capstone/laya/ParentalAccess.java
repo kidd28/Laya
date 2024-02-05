@@ -47,6 +47,8 @@ public class ParentalAccess extends AppCompatActivity {
     RecyclerView rv;
     ParentCategoryAdapter adapter;
     ArrayList<CategoriesModel> categoriesModels;
+    FirebaseUser user;
+    String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class ParentalAccess extends AppCompatActivity {
 
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
 
         Glide.with(this).load(R.drawable.back).centerCrop().into(back);
@@ -70,7 +74,6 @@ public class ParentalAccess extends AppCompatActivity {
 
         rv.setLayoutManager(layoutManager);
 
-        loadCategories();
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,10 +88,12 @@ public class ParentalAccess extends AppCompatActivity {
                 finish();
             }
         });
+
+        loadCategories();
+        loadCategoriesAddedbyUser();
     }
 
     private void loadCategoriesAddedbyUser() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {
@@ -110,24 +115,42 @@ public class ParentalAccess extends AppCompatActivity {
     }
 
     private void loadCategories() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    CategoriesModel model = snap.getValue(CategoriesModel.class);
-                    categoriesModels.add(model);
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        CategoriesModel model = snap.getValue(CategoriesModel.class);
+                        categoriesModels.add(model);
+                    }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
                 }
-                ParentCategoryAdapter categoriesAdapter = new ParentCategoryAdapter(ParentalAccess.this, categoriesModels);
-                rv.setAdapter(categoriesAdapter);
-                loadCategoriesAddedbyUser();
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
 
-            }
-        });
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
+            reference.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        CategoriesModel model = snap.getValue(CategoriesModel.class);
+                        categoriesModels.add(model);
+                    }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.capstone.laya.Adapter.AudioAdapter;
 import com.capstone.laya.Adapter.ParentAuidoAdapter;
 import com.capstone.laya.Model.AudioModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ public class ParentAccessAudio extends AppCompatActivity {
     ArrayList<AudioModel> audioModels;
     String category;
     FirebaseUser user;
+    String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class ParentAccessAudio extends AppCompatActivity {
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
         tv = findViewById(R.id.categoryName);
+
 
 
         Glide.with(this).load(R.drawable.back).centerCrop().into(back);
@@ -92,24 +95,51 @@ public class ParentAccessAudio extends AppCompatActivity {
     }
 
     private void loadAudio() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (Objects.equals(snap.child("Category").getValue(), category)) {
-                                AudioModel model = snap.getValue(AudioModel.class);
-                                audioModels.add(model);
-                    }
-                }
-                adapter = new ParentAuidoAdapter(ParentAccessAudio.this, audioModels);
-                rv.setAdapter(adapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (Objects.equals(snap.child("Category").getValue(), category)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
+                    }
+                    AudioAdapter audioAdapter = new AudioAdapter(ParentAccessAudio.this, audioModels);
+                    rv.setAdapter(audioAdapter);
+                    loadAudioAddedbyUser();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
+            reference1.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (Objects.equals(snap.child("Category").getValue(), category)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
+                    }
+                    AudioAdapter audioAdapter = new AudioAdapter(ParentAccessAudio.this, audioModels);
+                    rv.setAdapter(audioAdapter);
+                    loadAudioAddedbyUser();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
     }
 
     @Override
