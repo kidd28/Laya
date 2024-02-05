@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInAccount account;
     GoogleSignInClient mGoogleSignInClient;
     ProgressDialog progressDialog;
+    String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-        String language = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Language", "English");
+         language = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Language", "English");
 
         if(language.equals("Filipino")){
 
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
                                 Intent i = new Intent(MainActivity.this, Dashboard.class);
                                 i.putExtra("Welcome", "Welcome!");
+                                i.putExtra("Language", language);
                                 startActivity(i);
                                 finish();
                             }

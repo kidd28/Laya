@@ -69,6 +69,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -124,11 +125,22 @@ public class Dashboard extends AppCompatActivity {
         reference = database.getReference("Users");
 
 
+        String newlanguage = getIntent().getStringExtra("Language");
+
+
+
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 language = ""+snapshot.child("Language").getValue();
+
+                if(newlanguage != null){
+                    if(!newlanguage.equals(language)){
+                        setLanguage(newlanguage);
+                    }
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -224,6 +236,18 @@ public class Dashboard extends AppCompatActivity {
 
             return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
         }
+    }
+    private void setLanguage(String language) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("Language", language);
+        reference.child(user.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(Dashboard.this, "Language changed successfully ",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void requestForStoragePermissions() {

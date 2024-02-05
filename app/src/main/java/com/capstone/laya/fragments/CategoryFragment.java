@@ -12,12 +12,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.capstone.laya.Adapter.CategoriesAdapter;
 import com.capstone.laya.Adapter.ParentCategoryAdapter;
+import com.capstone.laya.Dashboard;
 import com.capstone.laya.Model.CategoriesModel;
 import com.capstone.laya.ParentalAccess;
 import com.capstone.laya.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +43,7 @@ public class CategoryFragment extends Fragment {
     FirebaseUser user;
     SearchView sv;
     String language;
+    String newlanguage;
     ArrayList<CategoriesModel> categoriesModels;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,17 +97,43 @@ public class CategoryFragment extends Fragment {
         sv = v.findViewById(R.id.sv);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        rv.setLayoutManager(layoutManager);
 
+        newlanguage = getActivity().getIntent().getStringExtra("Language");
+
+        categoriesModels.clear();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                language = "" + snapshot.child("Language").getValue();
+
+
+                if (newlanguage != null) {
+                    if (!newlanguage.equals(language)) {
+                        setLanguage(newlanguage);
+                    }else {
+                        loadCategories(language);
+                    }
+                }else {
+                    loadCategories(language);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        rv.setLayoutManager(layoutManager);
 
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!TextUtils.isEmpty(query.trim())){
+                if (!TextUtils.isEmpty(query.trim())) {
                     searchCat(query);
-                }else{
+                } else {
                     loadCategories(language);
                     loadCategoriesAddedbyUser();
                 }
@@ -111,9 +142,9 @@ public class CategoryFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!TextUtils.isEmpty(newText.trim())){
+                if (!TextUtils.isEmpty(newText.trim())) {
                     searchCat(newText);
-                }else{
+                } else {
                     loadCategories(language);
                     loadCategoriesAddedbyUser();
                 }
@@ -122,22 +153,23 @@ public class CategoryFragment extends Fragment {
         });
 
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                language = ""+snapshot.child("Language").getValue();
-                loadCategories(language);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         loadCategoriesAddedbyUser();
         return v;
+    }
+
+
+    private void setLanguage(String language) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("Language", language);
+        reference.child(user.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+                Toast.makeText(getActivity(), "Language changed successfully ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void loadCategoriesAddedbyUser() {
@@ -163,48 +195,94 @@ public class CategoryFragment extends Fragment {
         });
 
     }
+
     private void loadCategories(String language) {
         categoriesModels.clear();
-        if(language.equals("English")){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
-            reference.keepSynced(true);
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        CategoriesModel model = snap.getValue(CategoriesModel.class);
-                        categoriesModels.add(model);
+        if (newlanguage != null) {
+            if (newlanguage.equals("English")) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
+                reference.keepSynced(true);
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            CategoriesModel model = snap.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
+                        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                        rv.setAdapter(categoriesAdapter);
                     }
-                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
-                    rv.setAdapter(categoriesAdapter);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        } else if (language.equals("Filipino")) {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
-            reference.keepSynced(true);
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        CategoriesModel model = snap.getValue(CategoriesModel.class);
-                        categoriesModels.add(model);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
-                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
-                    rv.setAdapter(categoriesAdapter);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+                });
+            } else if (newlanguage.equals("Filipino")) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
+                reference.keepSynced(true);
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            CategoriesModel model = snap.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
+                        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                        rv.setAdapter(categoriesAdapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        } else {
+            if (language.equals("English")) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
+                reference.keepSynced(true);
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            CategoriesModel model = snap.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
+                        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                        rv.setAdapter(categoriesAdapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            } else if (language.equals("Filipino")) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
+                reference.keepSynced(true);
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            CategoriesModel model = snap.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
+                        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                        rv.setAdapter(categoriesAdapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
         }
 
+
     }
+
     private void searchCat(String query) {
-        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         categoriesModels = new ArrayList<>();
         categoriesModels.clear();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
@@ -228,25 +306,53 @@ public class CategoryFragment extends Fragment {
             }
         });
 
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory");
-        reference.keepSynced(true);
-        reference1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds.child("Category").toString().toLowerCase().contains(query.toLowerCase())) {
-                        CategoriesModel model = ds.getValue(CategoriesModel.class);
-                        categoriesModels.add(model);
+        if (language.equals("Filipino")) {
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
+            reference.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("Category").toString().toLowerCase().contains(query.toLowerCase())) {
+                            CategoriesModel model = ds.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
                     }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
                 }
-                CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
-                rv.setAdapter(categoriesAdapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        } else if (language.equals("English")) {
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
+            reference.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("Category").toString().toLowerCase().contains(query.toLowerCase())) {
+                            CategoriesModel model = ds.getValue(CategoriesModel.class);
+                            categoriesModels.add(model);
+                        }
+                    }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
