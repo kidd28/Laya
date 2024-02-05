@@ -56,6 +56,8 @@ public class AudioFragment extends Fragment {
     SearchView sv;
     RelativeLayout bg;
 
+    String language;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -118,7 +120,7 @@ public class AudioFragment extends Fragment {
             // System.out.println(category);
             cat.setText(category);
         }
-        loadAudio();
+
 
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -127,7 +129,7 @@ public class AudioFragment extends Fragment {
                 if (!TextUtils.isEmpty(query.trim())){
                     searchCat(query);
                 }else{
-                    loadAudio();
+                    loadAudio(language);
                     loadAudioAddedbyUser();
                 }
                 return false;
@@ -138,7 +140,7 @@ public class AudioFragment extends Fragment {
                 if (!TextUtils.isEmpty(newText.trim())){
                     searchCat(newText);
                 }else{
-                    loadAudio();
+                    loadAudio(language);
                     loadAudioAddedbyUser();
                 }
                 return false;
@@ -146,6 +148,22 @@ public class AudioFragment extends Fragment {
         });
 
         loadBgColor();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                language = ""+snapshot.child("Language").getValue();
+                loadAudio(language);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         return v;
     }
 
@@ -187,6 +205,8 @@ public class AudioFragment extends Fragment {
 
 
     private void loadAudioAddedbyUser() {
+
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
@@ -205,30 +225,58 @@ public class AudioFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+
     }
 
-    private void loadAudio() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
-        reference.keepSynced(true);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (Objects.equals(snap.child("Category").getValue(), category)) {
-                        AudioModel model = snap.getValue(AudioModel.class);
-                        audioModels.add(model);
+    private void loadAudio(String language) {
+
+        if (language.equals("English")){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (Objects.equals(snap.child("Category").getValue(), category)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
                     }
-                }
-                AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
-                rv.setAdapter(audioAdapter);
+                    AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                    rv.setAdapter(audioAdapter);
                     loadAudioAddedbyUser();
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else if (language.equals("Filipino")) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (Objects.equals(snap.child("Category").getValue(), category)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
+                    }
+                    AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                    rv.setAdapter(audioAdapter);
+                    loadAudioAddedbyUser();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
     }
     private void searchCat(String query) {
         FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
@@ -254,25 +302,47 @@ public class AudioFragment extends Fragment {
             }
         });
 
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
-        reference.keepSynced(true);
-        reference1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds.child("Name").toString().toLowerCase().contains(query.toLowerCase())) {
-                        AudioModel model = ds.getValue(AudioModel.class);
-                        audioModels.add(model);
+        if (language.equals("English")) {
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
+            reference.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("Name").toString().toLowerCase().contains(query.toLowerCase())) {
+                            AudioModel model = ds.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
                     }
+                    AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                    rv.setAdapter(audioAdapter);
                 }
-                AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
-                rv.setAdapter(audioAdapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        } else if (language.equals("Filipino")) {
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
+            reference.keepSynced(true);
+            reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("Name").toString().toLowerCase().contains(query.toLowerCase())) {
+                            AudioModel model = ds.getValue(AudioModel.class);
+                            audioModels.add(model);
+                        }
+                    }
+                    AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
+                    rv.setAdapter(audioAdapter);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
 
     }
     @Override

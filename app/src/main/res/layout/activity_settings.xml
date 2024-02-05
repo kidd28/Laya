@@ -155,7 +155,7 @@
                     android:src="@drawable/language" />
 
                 <TextView
-                    android:id="@+id/ttsvoice"
+                    android:id="@+id/language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/handosoftbold"

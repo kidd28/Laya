@@ -1,11 +1,11 @@
 package com.capstone.laya.Model;
 
 public class AudioModel {
-    String Name,FilePath,FileName,FileLink, ImageLink,Category,Id;
+    String Name,FilePath,FileName,FileLink, ImageLink,Category,Id,UserUID;
 
     public AudioModel(){}
 
-    public AudioModel(String Name, String FilePath, String FileName, String FileLink,String ImageLink,String Category,String Id){
+    public AudioModel(String Name, String FilePath, String FileName, String FileLink,String ImageLink,String Category,String Id,String UserUID){
         this.Name = Name;
         this.FilePath = FilePath;
         this.FileName = FileName;
@@ -13,6 +13,15 @@ public class AudioModel {
         this.ImageLink = ImageLink;
         this.Category = Category;
         this.Id = Id;
+        this.UserUID = UserUID;
+    }
+
+    public String getUserUID() {
+        return UserUID;
+    }
+
+    public void setUserUID(String userUID) {
+        UserUID = userUID;
     }
 
     public String getId() {

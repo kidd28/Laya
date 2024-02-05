@@ -15,8 +15,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -72,6 +74,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Dashboard extends AppCompatActivity {
     FirebaseDatabase database;
+    String language;
     private static final int STORAGE_PERMISSION_CODE = 23;
     private static final int STORAGE_PERMISSION_CODE11 = 24;
     DatabaseReference reference;
@@ -120,6 +123,18 @@ public class Dashboard extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Users");
 
+
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                language = ""+snapshot.child("Language").getValue();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         getUserName();
 
@@ -325,30 +340,54 @@ public class Dashboard extends AppCompatActivity {
     }
 
     public void additem(String id, String category) {
+
+
         System.out.println(id);
         System.out.println(category);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
-        reference.keepSynced(true);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (snap.child("Id").getValue().equals(id)) {
-                        AudioModel model = snap.getValue(AudioModel.class);
-                        audioModels.add(model);
-                        audioAdapter.notifyDataSetChanged();
+        if(language.equals("Filipino")){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (snap.child("Id").getValue().equals(id)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                            audioAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-        reference.keepSynced(true);
-        reference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        } else if (language.equals("English")) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (snap.child("Id").getValue().equals(id)) {
+                            AudioModel model = snap.getValue(AudioModel.class);
+                            audioModels.add(model);
+                            audioAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+        reference2.keepSynced(true);
+        reference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
@@ -376,8 +415,22 @@ public class Dashboard extends AppCompatActivity {
 
     private void download() {
         progressDialog.show();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
         reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    AudioModel model = snap.getValue(AudioModel.class);
+                    downloadFile(model.getFileLink(), model.getId());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
+        reference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
@@ -491,4 +544,6 @@ public class Dashboard extends AppCompatActivity {
             }
         });
  }
+
+
 }

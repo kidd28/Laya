@@ -72,44 +72,51 @@ public class ParentAuidoAdapter extends RecyclerView.Adapter<ParentAuidoAdapter.
         holder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                PopupMenu p = new PopupMenu(context, view);
-                MenuInflater inflater = p.getMenuInflater();
-                inflater.inflate(R.menu.poupup_menu, p.getMenu());
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        int m = menuItem.getItemId();
-                        switch (m) {
-                            case R.id.edit:
-                                Intent intent = new Intent(context, EditAudio.class);
-                                intent.putExtra("Name", model.getName());
-                                intent.putExtra("Category", model.getCategory());
-                                intent.putExtra("FilePath", model.getFilePath());
-                                intent.putExtra("FileName", model.getFileName());
-                                intent.putExtra("FileLink", model.getFileLink());
-                                intent.putExtra("ImageLink", model.getImageLink());
-                                context.startActivity(intent);
-                                ((Activity) context).finish();
-                                break;
-                            case R.id.delete:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setMessage("Do you want to delete this Category?");
-                                builder.setTitle("Delete Category");
-                                builder.setCancelable(false);
-                                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                    deleteAudio(model.getFileLink(), model.getImageLink(), model.getName());
-                                });
-                                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                    dialog.cancel();
-                                });
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                break;
+
+                if(model.getUserUID().equals("Admin")){
+
+                }else{
+                    PopupMenu p = new PopupMenu(context, view);
+                    MenuInflater inflater = p.getMenuInflater();
+                    inflater.inflate(R.menu.poupup_menu, p.getMenu());
+                    p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            int m = menuItem.getItemId();
+                            switch (m) {
+                                case R.id.edit:
+                                    Intent intent = new Intent(context, EditAudio.class);
+                                    intent.putExtra("Name", model.getName());
+                                    intent.putExtra("Category", model.getCategory());
+                                    intent.putExtra("FilePath", model.getFilePath());
+                                    intent.putExtra("FileName", model.getFileName());
+                                    intent.putExtra("FileLink", model.getFileLink());
+                                    intent.putExtra("ImageLink", model.getImageLink());
+                                    context.startActivity(intent);
+                                    ((Activity) context).finish();
+                                    break;
+                                case R.id.delete:
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setMessage("Do you want to delete this Category?");
+                                    builder.setTitle("Delete Category");
+                                    builder.setCancelable(false);
+                                    builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        deleteAudio(model.getFileLink(), model.getImageLink(), model.getName());
+                                    });
+                                    builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        dialog.cancel();
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    break;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
-                p.show();
+                    });
+                    p.show();
+                }
+
+
                 return true;
             }
         });

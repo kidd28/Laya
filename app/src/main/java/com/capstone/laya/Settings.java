@@ -1,5 +1,6 @@
 package com.capstone.laya;
 
+import static android.Manifest.permission.RECORD_AUDIO;
 import static android.app.PendingIntent.getActivity;
 
 import androidx.annotation.NonNull;
@@ -7,11 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,6 +43,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings extends AppCompatActivity {
@@ -46,7 +53,7 @@ public class Settings extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     CardView parentalacess;
-    TextView name, email, account, ttsvoice, passcode, feedback, about;
+    TextView name, email, account, language, passcode, feedback, about;
     CircleImageView pfp;
 
     ImageView backwhite;
@@ -63,7 +70,7 @@ public class Settings extends AppCompatActivity {
         pfp = findViewById(R.id.pfp);
         logout = findViewById(R.id.logout);
         account = findViewById(R.id.account);
-        ttsvoice = findViewById(R.id.ttsvoice);
+        language = findViewById(R.id.language);
         passcode = findViewById(R.id.passcode);
         feedback = findViewById(R.id.feedback);
         about = findViewById(R.id.about);
@@ -97,6 +104,30 @@ public class Settings extends AppCompatActivity {
                 finish();
             }
         });
+
+        language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String option[] = {"English", "Filipino"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setTitle("Select Language");
+                builder.setItems(option, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                              setLanguage("English");
+                                break;
+                            case 1:
+                                setLanguage("Filipino");
+                                break;
+                        }
+                    }
+                });
+                builder.create().show();
+            }
+        });
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(Settings.this, gso);
@@ -120,6 +151,19 @@ public class Settings extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         loadUserprofile();
+    }
+
+    private void setLanguage(String language) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("Language", language);
+        reference.child(user.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(Settings.this, "Language changed successfully ",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void loadUserprofile() {

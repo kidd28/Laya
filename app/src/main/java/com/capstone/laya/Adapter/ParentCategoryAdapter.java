@@ -84,39 +84,45 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
         holder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                PopupMenu p = new PopupMenu(context, view);
-                MenuInflater inflater = p.getMenuInflater();
-                inflater.inflate(R.menu.poupup_menu, p.getMenu());
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        int m = menuItem.getItemId();
-                        switch (m){
-                            case R.id.edit:
-                                Intent i = new Intent(context, EditCategory.class);
-                                i.putExtra("CategoryName", category);
-                                i.putExtra("ImageLink", img);
-                                context.startActivity(i);
-                                break;
-                            case R.id.delete:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setMessage("Do you want to delete this Category?");
-                                builder.setTitle("Delete Category");
-                                builder.setCancelable(false);
-                                builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                    deleteCategory(category, img);
-                                });
-                                builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                    dialog.cancel();
-                                });
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                        break;
+
+                if(categoriesModel.getUserUID().equals("Admin")){
+
+                }else {
+                    PopupMenu p = new PopupMenu(context, view);
+                    MenuInflater inflater = p.getMenuInflater();
+                    inflater.inflate(R.menu.poupup_menu, p.getMenu());
+                    p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            int m = menuItem.getItemId();
+                            switch (m) {
+                                case R.id.edit:
+                                    Intent i = new Intent(context, EditCategory.class);
+                                    i.putExtra("CategoryName", category);
+                                    i.putExtra("ImageLink", img);
+                                    context.startActivity(i);
+                                    break;
+                                case R.id.delete:
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setMessage("Do you want to delete this Category?");
+                                    builder.setTitle("Delete Category");
+                                    builder.setCancelable(false);
+                                    builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        deleteCategory(category, img);
+                                    });
+                                    builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        dialog.cancel();
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    break;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
-                p.show();
+                    });
+                    p.show();
+
+                }
                 return true;
             }
         });

@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -56,7 +57,7 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         setContentView(R.layout.activity_register);
 
         email = findViewById(R.id.EditText_email);
-        name = findViewById(R.id.EditText_name);
+         name = findViewById(R.id.EditText_name);
         dob = findViewById(R.id.EditText_dob);
         calendar = findViewById(R.id.calendar);
         register = findViewById(R.id.Register);
@@ -111,11 +112,12 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String language = PreferenceManager.getDefaultSharedPreferences(Register.this).getString("Language", "English");
                 if(Dob != null && Name != null && !name.getText().toString().equals("") && Gender!= null){
                     user = FirebaseAuth.getInstance().getCurrentUser();
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("Email", user.getEmail());
+                    hashMap.put("Language", language);
                     hashMap.put("Uid", uid);
                     hashMap.put("Name", name.getText().toString());
                     hashMap.put("DateOfBirth", Dob);

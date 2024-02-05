@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     CardView Login;
 
+    TextView btntext;
     FirebaseAuth mAuth;
     FirebaseUser user;
     GoogleSignInAccount account;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //initialize variables
         Login = findViewById(R.id.login);
+        btntext = findViewById(R.id.btntext);
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Loading..."); // Setting Message
         progressDialog.setTitle("Login"); // Setting Title
@@ -54,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
 
+        String language = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Language", "English");
+
+        if(language.equals("Filipino")){
+
+            btntext.setText("Magsiluma");
+
+        } else if (language.equals("English")) {
+            btntext.setText("Get Started");
+        }
         //Begin Sign in request
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -83,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // google sign in failed
-                Toast.makeText(this, "Google sign in failed:" + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
                 System.out.println(e);
             }
         }
@@ -123,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -136,5 +152,22 @@ public class MainActivity extends AppCompatActivity {
         } else {
             progressDialog.cancel();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        new AlertDialog.Builder(this)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).create().show();
+
+
     }
 }

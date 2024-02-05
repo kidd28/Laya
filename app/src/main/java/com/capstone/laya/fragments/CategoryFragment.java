@@ -38,6 +38,7 @@ public class CategoryFragment extends Fragment {
     CategoriesAdapter adapter;
     FirebaseUser user;
     SearchView sv;
+    String language;
     ArrayList<CategoriesModel> categoriesModels;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,8 +95,7 @@ public class CategoryFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         rv.setLayoutManager(layoutManager);
 
-        loadCategories();
-        loadCategoriesAddedbyUser();
+
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -103,7 +103,7 @@ public class CategoryFragment extends Fragment {
                 if (!TextUtils.isEmpty(query.trim())){
                     searchCat(query);
                 }else{
-                    loadCategories();
+                    loadCategories(language);
                     loadCategoriesAddedbyUser();
                 }
                 return false;
@@ -114,12 +114,29 @@ public class CategoryFragment extends Fragment {
                 if (!TextUtils.isEmpty(newText.trim())){
                     searchCat(newText);
                 }else{
-                    loadCategories();
+                    loadCategories(language);
                     loadCategoriesAddedbyUser();
                 }
                 return false;
             }
         });
+
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                language = ""+snapshot.child("Language").getValue();
+                loadCategories(language);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        loadCategoriesAddedbyUser();
         return v;
     }
 
@@ -146,26 +163,45 @@ public class CategoryFragment extends Fragment {
         });
 
     }
-    private void loadCategories() {
+    private void loadCategories(String language) {
         categoriesModels.clear();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory");
-        reference.keepSynced(true);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    CategoriesModel model = snap.getValue(CategoriesModel.class);
-                    categoriesModels.add(model);
+        if(language.equals("English")){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        CategoriesModel model = snap.getValue(CategoriesModel.class);
+                        categoriesModels.add(model);
+                    }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
                 }
-                CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
-                rv.setAdapter(categoriesAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        } else if (language.equals("Filipino")) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino");
+            reference.keepSynced(true);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        CategoriesModel model = snap.getValue(CategoriesModel.class);
+                        categoriesModels.add(model);
+                    }
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categoriesModels);
+                    rv.setAdapter(categoriesAdapter);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+
     }
     private void searchCat(String query) {
         FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
