@@ -29,14 +29,10 @@ public class SplashScreen extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         int secondsDelayed = 1;
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-
-
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 startActivity(new Intent(SplashScreen.this, OnboardingActivity.class));
                 finish();
-
             }
         }, secondsDelayed * 5000);
         Glide.with(this).load(R.drawable.splashscreen).centerCrop().into(logo);

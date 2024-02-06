@@ -30,24 +30,9 @@ public class OnboardingActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         introPref = new IntroPref(this);
         if (!introPref.isFirstTimeLaunch()){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("SecurityQuestions");
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.child(user.getUid()).exists()){
-                        startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
-                        finish();
-                    }else {
-                        startActivity(new Intent(OnboardingActivity.this, SecurityQuestions.class));
-                        finish();
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
+            startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
+            finish();
 
         }
         if (savedInstanceState == null) {
