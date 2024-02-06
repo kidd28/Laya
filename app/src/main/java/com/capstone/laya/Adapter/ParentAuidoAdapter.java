@@ -92,6 +92,7 @@ public class ParentAuidoAdapter extends RecyclerView.Adapter<ParentAuidoAdapter.
                                     intent.putExtra("FileName", model.getFileName());
                                     intent.putExtra("FileLink", model.getFileLink());
                                     intent.putExtra("ImageLink", model.getImageLink());
+                                    intent.putExtra("UserUID", model.getUserUID());
                                     context.startActivity(intent);
                                     ((Activity) context).finish();
                                     break;

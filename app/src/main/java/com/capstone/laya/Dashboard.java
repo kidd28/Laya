@@ -134,7 +134,6 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 language = ""+snapshot.child("Language").getValue();
-
                 if(newlanguage != null){
                     if(!newlanguage.equals(language)){
                         setLanguage(newlanguage);

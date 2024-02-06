@@ -149,34 +149,12 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        progressDialog.show();
         if (user != null) {
             user.reload();
             progressDialog.cancel();
-
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("SecurityQuestions");
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.child(user.getUid()).exists()){
-                        startActivity(new Intent(MainActivity.this, Dashboard.class));
-                        finish();
-                    }else {
-                        Intent i = new Intent(MainActivity.this, SecurityQuestions.class);
-                        i.putExtra("set", "old");
-                        startActivity(i);
-                        finish();
-                    }
-
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+            finish();
         } else {
-            progressDialog.cancel();
         }
     }
 

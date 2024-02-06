@@ -76,7 +76,7 @@ public class EditAudio extends AppCompatActivity {
     String fname;
     private Uri imagefilePath;
 
-    String Name, Category, FilePath, FileName, FileLink, ImageLink;
+    String Name, Category, FilePath, FileName, FileLink, ImageLink,UserUID;
 
     boolean upImg, upAudio;
     private TextToSpeechHelper textToSpeechHelper;
@@ -103,6 +103,7 @@ public class EditAudio extends AppCompatActivity {
         FileName = getIntent().getExtras().getString("FileName");
         FileLink = getIntent().getExtras().getString("FileLink");
         ImageLink = getIntent().getExtras().getString("ImageLink");
+        UserUID = getIntent().getExtras().getString("UserUID");
 
 
         textToSpeechHelper = new TextToSpeechHelper(EditAudio.this, "Edit");
@@ -202,7 +203,7 @@ public class EditAudio extends AppCompatActivity {
         hashMap.put("FilePath", FilePath);
         hashMap.put("FileName", FileName);
         hashMap.put("FileLink", FileLink);
-        hashMap.put("ImageLink", ImageLink);
+        hashMap.put("UserUID", UserUID);
         hashMap.put("Id", id);
         reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -225,6 +226,7 @@ public class EditAudio extends AppCompatActivity {
         hashMap.put("FileName", FileName);
         hashMap.put("FileLink", FileLink);
         hashMap.put("ImageLink", ImageLink);
+        hashMap.put("UserUID", UserUID);
         reference.child(Name).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {

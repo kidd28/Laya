@@ -24,12 +24,14 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.capstone.laya.Dashboard;
 import com.capstone.laya.EditCategory;
 import com.capstone.laya.Model.AudioModel;
 import com.capstone.laya.Model.CategoriesModel;
 import com.capstone.laya.ParentAccessAudio;
 import com.capstone.laya.ParentalAccess;
 import com.capstone.laya.R;
+import com.capstone.laya.Settings;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,22 +48,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryAdapter.HolderAdapter> {
+public class ParentCategoryAdapter extends RecyclerView.Adapter<ParentCategoryAdapter.HolderAdapter> {
     Context context;
     ArrayList<CategoriesModel> categoriesModels;
     FirebaseUser user;
 
 
-    public ParentCategoryAdapter(Context context, ArrayList<CategoriesModel> model){
+    public ParentCategoryAdapter(Context context, ArrayList<CategoriesModel> model) {
         this.context = context;
         this.categoriesModels = model;
     }
+
     @NonNull
     @Override
     public ParentCategoryAdapter.HolderAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_list, parent, false);
         return new ParentCategoryAdapter.HolderAdapter(v);
     }
+
     @Override
     public void onBindViewHolder(@NonNull ParentCategoryAdapter.HolderAdapter holder, int position) {
         CategoriesModel categoriesModel = categoriesModels.get(position);
@@ -77,7 +81,7 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                 Intent i = new Intent(context, ParentAccessAudio.class);
                 i.putExtra("Category", category);
                 context.startActivity(i);
-                ((Activity)context).finish();
+                ((Activity) context).finish();
             }
         });
 
@@ -85,9 +89,9 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
             @Override
             public boolean onLongClick(View view) {
 
-                if(categoriesModel.getUserUID().equals("Admin")){
+                if (categoriesModel.getUserUID().equals("Admin")) {
 
-                }else {
+                } else {
                     PopupMenu p = new PopupMenu(context, view);
                     MenuInflater inflater = p.getMenuInflater();
                     inflater.inflate(R.menu.poupup_menu, p.getMenu());
@@ -100,7 +104,10 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                     Intent i = new Intent(context, EditCategory.class);
                                     i.putExtra("CategoryName", category);
                                     i.putExtra("ImageLink", img);
+                                    i.putExtra("Color", categoriesModel.getColor().toString());
+                                    i.putExtra("UserUID", categoriesModel.getUserUID().toString());
                                     context.startActivity(i);
+                                    ((Activity) context).finish();
                                     break;
                                 case R.id.delete:
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -138,19 +145,19 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                 reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-                        reference.addValueEventListener(new ValueEventListener() {
+
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+                        reference1.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot snap : snapshot.getChildren()){
+                                for (DataSnapshot snap : snapshot.getChildren()) {
                                     if (Objects.equals(snap.child("Category").getValue(), category)) {
-                                        for(DataSnapshot snp :snap.getChildren()){
+                                        for (DataSnapshot snp : snap.getChildren()) {
                                             DatabaseReference ref1 = snp.getRef();
                                             ref1.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
-                                                    context.startActivity(new Intent(context, ParentalAccess.class));
-                                                    ((Activity) context).finish();
+
                                                 }
                                             });
                                         }
@@ -158,16 +165,22 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                                 }
 
                             }
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
+                        context.startActivity(new Intent(context, Settings.class));
+                        ((Activity) context).finish();
                     }
+
+
                 });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
 
             }
@@ -178,8 +191,9 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
                 Log.e("firebasestorage", "onFailure: did not delete file");
             }
         });
-    }
 
+
+    }
 
 
     @Override
@@ -191,6 +205,7 @@ public class ParentCategoryAdapter  extends RecyclerView.Adapter<ParentCategoryA
         ImageView img, go;
         CardView card;
         TextView category;
+
         public HolderAdapter(@NonNull View itemView) {
             super(itemView);
 

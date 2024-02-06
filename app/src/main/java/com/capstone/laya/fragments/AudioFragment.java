@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class AudioFragment extends Fragment {
     RelativeLayout bg;
 
     String language;
+    ImageView back;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,6 +108,7 @@ public class AudioFragment extends Fragment {
         cat = v.findViewById(R.id.cat);
         sv = v.findViewById(R.id.sv);
         bg = v.findViewById(R.id.bg);
+        back = v.findViewById(R.id.back);
 
         audioModels = new ArrayList<>();
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -122,13 +125,12 @@ public class AudioFragment extends Fragment {
         }
 
 
-
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!TextUtils.isEmpty(query.trim())){
+                if (!TextUtils.isEmpty(query.trim())) {
                     searchCat(query);
-                }else{
+                } else {
                     loadAudio(language);
                     loadAudioAddedbyUser();
                 }
@@ -137,9 +139,9 @@ public class AudioFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!TextUtils.isEmpty(newText.trim())){
+                if (!TextUtils.isEmpty(newText.trim())) {
                     searchCat(newText);
-                }else{
+                } else {
                     loadAudio(language);
                     loadAudioAddedbyUser();
                 }
@@ -153,8 +155,79 @@ public class AudioFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                language = ""+snapshot.child("Language").getValue();
+                language = "" + snapshot.child("Language").getValue();
                 loadAudio(language);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CategoryFragment(); // replace your custom fragment class
+                Bundle bundle = new Bundle();
+                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                System.out.println(category);
+                bundle.putString("Category", category); // use as per your need
+                fragment.setArguments(bundle);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.fragmentView, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+
+        return v;
+    }
+
+    private void loadBgColor() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid()).child(category);
+        reference.keepSynced(true);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    System.out.println(String.valueOf(snapshot.child("Color").getValue()));
+                    bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English").child(category);
+        reference1.keepSynced(true);
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    System.out.println(String.valueOf(snapshot.child("Color").getValue()));
+                    bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("Filipino").child(category);
+        reference2.keepSynced(true);
+        reference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    System.out.println(String.valueOf(snapshot.child("Color").getValue()));
+                    bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
+                } catch (Exception ignored) {
+                }
             }
 
             @Override
@@ -164,44 +237,7 @@ public class AudioFragment extends Fragment {
         });
 
 
-        return v;
     }
-
-    private void loadBgColor() {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid()).child(category);
-            reference.keepSynced(true);
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try{
-                        System.out.println(String.valueOf(snapshot.child("Color").getValue()));
-                        bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
-                    }catch(Exception ignored){}
-                  }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child(category);
-            reference1.keepSynced(true);
-            reference1.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try{
-                        System.out.println(String.valueOf(snapshot.child("Color").getValue()));
-                        bg.getBackground().setColorFilter(Color.parseColor(String.valueOf(snapshot.child("Color").getValue())), PorterDuff.Mode.SRC_OVER);
-                    }catch(Exception ignored){}}
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-    }
-
 
 
     private void loadAudioAddedbyUser() {
@@ -221,6 +257,7 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -231,7 +268,7 @@ public class AudioFragment extends Fragment {
 
     private void loadAudio(String language) {
 
-        if (language.equals("English")){
+        if (language.equals("English")) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
             reference.keepSynced(true);
             reference.addValueEventListener(new ValueEventListener() {
@@ -278,8 +315,9 @@ public class AudioFragment extends Fragment {
         }
 
     }
+
     private void searchCat(String query) {
-        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         audioModels = new ArrayList<>();
         audioModels.clear();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
@@ -297,6 +335,7 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -345,6 +384,7 @@ public class AudioFragment extends Fragment {
         }
 
     }
+
     @Override
     public void onDetach() {
         super.onDetach();

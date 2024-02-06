@@ -46,23 +46,7 @@ public class Passcode extends AppCompatActivity {
         nextintent = getIntent().getStringExtra("Intent");
 
 
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validatePin();
-            }
-        });
-
-        forgotpin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Passcode.this, ForgotPin.class));
-            }
-        });
-    }
-
-    private void validatePin() {
+        pinView1.setText("");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -73,7 +57,24 @@ public class Passcode extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        if(pinView1.getText().toString().isEmpty() || pinView1.getText().length() < 4){
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validatePin(pin);
+            }
+        });
+
+        forgotpin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Passcode.this, ForgotPin.class));
+            }
+        });
+
+    }
+
+    private void validatePin(String pin) {
+        if(pinView1.getText().toString().equals("") || pinView1.getText().toString().length() < 4){
             error.setVisibility(View.VISIBLE);
             error.setText("Please Enter 4 digit pin");
         }else if(!pinView1.getText().toString().equals(pin) ){

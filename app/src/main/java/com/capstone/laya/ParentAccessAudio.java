@@ -70,6 +70,15 @@ public class ParentAccessAudio extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ParentAccessAudio.this, ParentalAccess.class);
+                i.putExtra("Category", category);
+                startActivity(i);
+                finish();
+            }
+        });
         loadAudio();
         loadAudioAddedbyUser();
     }
@@ -95,7 +104,6 @@ public class ParentAccessAudio extends AppCompatActivity {
     }
 
     private void loadAudio() {
-
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
             reference.keepSynced(true);
             reference.addValueEventListener(new ValueEventListener() {
@@ -109,7 +117,6 @@ public class ParentAccessAudio extends AppCompatActivity {
                     }
                     AudioAdapter audioAdapter = new AudioAdapter(ParentAccessAudio.this, audioModels);
                     rv.setAdapter(audioAdapter);
-                    loadAudioAddedbyUser();
                 }
 
                 @Override
@@ -131,7 +138,6 @@ public class ParentAccessAudio extends AppCompatActivity {
                     }
                     AudioAdapter audioAdapter = new AudioAdapter(ParentAccessAudio.this, audioModels);
                     rv.setAdapter(audioAdapter);
-                    loadAudioAddedbyUser();
                 }
 
                 @Override
@@ -139,9 +145,7 @@ public class ParentAccessAudio extends AppCompatActivity {
 
                 }
             });
-
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

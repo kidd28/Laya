@@ -23,7 +23,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/_18sdp"
                 android:fontFamily="@font/handosoftbold"
-                android:text="Hello Mian"
+                android:text="Hello"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_22sdp" />
         </LinearLayout>

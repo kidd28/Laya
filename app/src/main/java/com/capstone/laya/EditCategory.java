@@ -2,11 +2,13 @@ package com.capstone.laya;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +50,7 @@ import java.util.UUID;
 public class EditCategory extends AppCompatActivity {
 
     String ImageLink, CategoryName;
-    Button uploadImg,colorPicker, materialColor;
+    Button uploadImg, colorPicker, materialColor;
     EditText categoryName;
     ImageView image, upload, back;
 
@@ -62,6 +65,7 @@ public class EditCategory extends AppCompatActivity {
     String categoryname, Selectedcolor;
 
     FirebaseUser user;
+    CardView layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,7 @@ public class EditCategory extends AppCompatActivity {
         back = findViewById(R.id.back);
         colorPicker = findViewById(R.id.colorPicker);
         materialColor = findViewById(R.id.materialColor);
+        layout = findViewById(R.id.bg);
 
 
         storage = FirebaseStorage.getInstance();
@@ -84,8 +89,9 @@ public class EditCategory extends AppCompatActivity {
 
         ImageLink = getIntent().getExtras().getString("ImageLink");
         CategoryName = getIntent().getExtras().getString("CategoryName");
+        Selectedcolor = getIntent().getExtras().getString("Color");
 
-
+        layout.setBackgroundColor(Color.parseColor(Selectedcolor));
         Glide.with(this).load(ImageLink).centerCrop().into(image);
         categoryName.setText(CategoryName);
         uploadImg.setOnClickListener(new View.OnClickListener() {
@@ -98,12 +104,20 @@ public class EditCategory extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(CategoryName.equals(categoryName.getText().toString())){
-                    Save();
-                }else{
-                    SaveNew();
-                }
+                if (Selectedcolor.equals("")) {
+                    Toast.makeText(EditCategory.this, "Please Select Color", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (CategoryName.equals(categoryName.getText().toString())) {
+                        Save();
+                    } else {
+                        if(categoryName.getText().toString().equals("") || categoryName.getText().toString().equals(null)){
+                            Toast.makeText(EditCategory.this, "Please enter category name", Toast.LENGTH_SHORT).show();
 
+                        }else{
+                            SaveNew();
+                        }
+                    }
+                }
             }
         });
 
@@ -126,6 +140,7 @@ public class EditCategory extends AppCompatActivity {
                             @Override
                             public void onColorSelected(int color, @NotNull String colorHex) {
                                 Selectedcolor = colorHex; // Handle Color Selection
+                                layout.setBackgroundColor(Color.parseColor(Selectedcolor));
                             }
                         })
                         .show();
@@ -145,6 +160,7 @@ public class EditCategory extends AppCompatActivity {
                             @Override
                             public void onColorSelected(int color, @NotNull String colorHex) {
                                 Selectedcolor = colorHex;
+                                layout.setBackgroundColor(Color.parseColor(Selectedcolor));
                             }
                         })
                         .show();
@@ -158,6 +174,7 @@ public class EditCategory extends AppCompatActivity {
         hashMap.put("Category", CategoryName);
         hashMap.put("ImageLink", ImageLink);
         hashMap.put("Color", Selectedcolor);
+        hashMap.put("UserUID", user.getUid());
         reference.child(CategoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -170,26 +187,28 @@ public class EditCategory extends AppCompatActivity {
 
             }
         });
-
     }
-
     private void SaveNew() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Category", categoryName.getText().toString());
         hashMap.put("ImageLink", ImageLink);
         hashMap.put("Color", Selectedcolor);
+        hashMap.put("UserUID", user.getUid());
+
         reference.child(categoryName.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                reference.child(CategoryName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                DatabaseReference reference5 = FirebaseDatabase.getInstance().getReference("CategoryAddedbyUser").child(user.getUid());
+                reference5.child(CategoryName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
                         reference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot snap : snapshot.getChildren()){
+                                for (DataSnapshot snap : snapshot.getChildren()) {
                                     if (Objects.equals(snap.child("Category").getValue(), CategoryName)) {
                                         DatabaseReference ref1 = snap.getRef();
                                         HashMap<String, Object> hashMap = new HashMap<>();
@@ -199,7 +218,6 @@ public class EditCategory extends AppCompatActivity {
                                             public void onSuccess(Void unused) {
                                                 startActivity(new Intent(EditCategory.this, ParentalAccess.class));
                                                 finish();
-                                                Toast.makeText(EditCategory.this, "Success", Toast.LENGTH_SHORT);
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -210,12 +228,15 @@ public class EditCategory extends AppCompatActivity {
                                     }
                                 }
                             }
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
                     }
                 });
+
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {

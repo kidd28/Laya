@@ -20,6 +20,7 @@
             android:layout_marginTop="@dimen/_10sdp">
 
             <ImageView
+                android:id="@+id/back"
                 android:layout_width="@dimen/_11sdp"
                 android:layout_height="@dimen/_11sdp"
                 android:layout_centerVertical="true"

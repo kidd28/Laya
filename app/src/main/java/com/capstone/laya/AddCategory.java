@@ -12,10 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.github.dhaval2404.colorpicker.ColorPickerDialog;
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog;
@@ -42,7 +44,7 @@ import java.util.UUID;
 
 public class AddCategory extends AppCompatActivity {
 
-    Button uploadImg,colorPicker, materialColor;
+    Button uploadImg, colorPicker, materialColor;
     EditText categoryName;
     ImageView image, upload, back;
     private final int PICK_IMAGE_REQUEST = 22;
@@ -57,6 +59,9 @@ public class AddCategory extends AppCompatActivity {
 
     FirebaseUser user;
 
+    Boolean hasimage;
+    CardView layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +74,12 @@ public class AddCategory extends AppCompatActivity {
         back = findViewById(R.id.back);
         colorPicker = findViewById(R.id.colorPicker);
         materialColor = findViewById(R.id.materialColor);
+        layout = findViewById(R.id.bg);
+
+        hasimage = false;
 
 
+        Selectedcolor = "";
         storage = FirebaseStorage.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -89,7 +98,19 @@ public class AddCategory extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 categoryname = categoryName.getText().toString();
-                uploadImage(categoryname);
+                if (Selectedcolor.equals("") || Selectedcolor.equals(null)) {
+                    Toast.makeText(AddCategory.this, "Please Select Color", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (categoryName.getText().toString().equals("") || categoryName.getText().toString().equals(null)) {
+                        Toast.makeText(AddCategory.this, "Please enter category name", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (hasimage) {
+                            uploadImage(categoryname);
+                        } else {
+                            Toast.makeText(AddCategory.this, "Please add image", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
             }
         });
 
@@ -114,6 +135,7 @@ public class AddCategory extends AppCompatActivity {
                             @Override
                             public void onColorSelected(int color, @NotNull String colorHex) {
                                 Selectedcolor = colorHex; // Handle Color Selection
+                                layout.setBackgroundColor(Color.parseColor(Selectedcolor));
                             }
                         })
                         .show();
@@ -133,6 +155,7 @@ public class AddCategory extends AppCompatActivity {
                             @Override
                             public void onColorSelected(int color, @NotNull String colorHex) {
                                 Selectedcolor = colorHex;
+                                layout.setBackgroundColor(Color.parseColor(Selectedcolor));
                             }
                         })
                         .show();
@@ -162,6 +185,7 @@ public class AddCategory extends AppCompatActivity {
                 // Setting image on image view using Bitmap
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 image.setImageBitmap(bitmap);
+                hasimage = true;
             } catch (IOException e) {
                 // Log the exception
                 e.printStackTrace();
@@ -195,6 +219,7 @@ public class AddCategory extends AppCompatActivity {
                                         hashMap.put("Category", categoryName);
                                         hashMap.put("ImageLink", downloadUri);
                                         hashMap.put("Color", Selectedcolor);
+                                        hashMap.put("UserUID", user.getUid());
                                         reference.child(categoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {

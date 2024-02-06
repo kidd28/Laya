@@ -300,6 +300,7 @@ public class AddAudio extends AppCompatActivity {
                 hashMap.put("FileLink", AudioLink);
                 hashMap.put("ImageLink", ImageLink);
                 hashMap.put("Id", id);
+                hashMap.put("UserUID",user.getUid());
                 reference.child(name.getText().toString()).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
