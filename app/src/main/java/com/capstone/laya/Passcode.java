@@ -29,7 +29,7 @@ public class Passcode extends AppCompatActivity {
     CardView confirm;
     String pin;
 
-    TextView error;
+    TextView error,forgotpin;
 
     String nextintent;
     @Override
@@ -40,19 +40,11 @@ public class Passcode extends AppCompatActivity {
         pinView1 = findViewById(R.id.firstPinView);
         error = findViewById(R.id.error);
         confirm = findViewById(R.id.next);
+        forgotpin = findViewById(R.id.forgotpin);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         nextintent = getIntent().getStringExtra("Intent");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                pin =snapshot.child("Pin").getValue().toString();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+
 
 
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +54,12 @@ public class Passcode extends AppCompatActivity {
             }
         });
 
-
+        forgotpin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Passcode.this, ForgotPin.class));
+            }
+        });
     }
 
     private void validatePin() {

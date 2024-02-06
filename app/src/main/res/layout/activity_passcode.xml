@@ -61,6 +61,19 @@
             app:lineWidth="2dp"
             app:viewType="rectangle" />
 
+
+        <TextView
+            android:id="@+id/forgotpin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:fontFamily="@font/handosoftbold"
+            android:text="@string/forgot_Pin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/next"
             android:layout_width="@dimen/_110sdp"

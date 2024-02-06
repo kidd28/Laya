@@ -364,8 +364,6 @@ public class Dashboard extends AppCompatActivity {
     }
 
     public void additem(String id, String category) {
-
-
         System.out.println(id);
         System.out.println(category);
 

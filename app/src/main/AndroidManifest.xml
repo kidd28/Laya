@@ -26,6 +26,12 @@
         android:theme="@style/Theme.Laya"
         tools:targetApi="31">
         <activity
+            android:name=".ForgotPin"
+            android:exported="false" />
+        <activity
+            android:name=".SecurityQuestions"
+            android:exported="false" />
+        <activity
             android:name=".OnboardingActivity"
             android:exported="false" />
         <activity

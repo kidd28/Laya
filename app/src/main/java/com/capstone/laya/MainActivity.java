@@ -28,7 +28,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -149,8 +153,28 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             user.reload();
             progressDialog.cancel();
-            startActivity(new Intent(MainActivity.this, Dashboard.class));
-            finish();
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("SecurityQuestions");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.child(user.getUid()).exists()){
+                        startActivity(new Intent(MainActivity.this, Dashboard.class));
+                        finish();
+                    }else {
+                        Intent i = new Intent(MainActivity.this, SecurityQuestions.class);
+                        i.putExtra("set", "old");
+                        startActivity(i);
+                        finish();
+                    }
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         } else {
             progressDialog.cancel();
         }

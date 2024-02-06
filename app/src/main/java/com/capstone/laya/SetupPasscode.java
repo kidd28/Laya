@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class SetupPasscode extends AppCompatActivity {
     String pin;
     String type;
     TextView error,done,setup;
+    String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class SetupPasscode extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(SetupPasscode.this, gso);
 
-
+        language = PreferenceManager.getDefaultSharedPreferences(SetupPasscode.this).getString("Language", "English");
         pinView1 = findViewById(R.id.firstPinView);
         pinView2 = findViewById(R.id.SecondPinView);
         error = findViewById(R.id.error);
@@ -55,7 +57,7 @@ public class SetupPasscode extends AppCompatActivity {
 
 
         type = getIntent().getStringExtra("Type");
-        if(type.equals("Update")){
+        if(type.equals("Update")|| type.equals("Reset")){
             done.setVisibility(View.GONE);
             setup.setText("Enter new passcode");
         }
@@ -86,9 +88,17 @@ public class SetupPasscode extends AppCompatActivity {
             reference.child(user.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    Intent intent = new Intent(SetupPasscode.this, Dashboard.class);
+                    if(type.equals("New")){
+                    Intent intent = new Intent(SetupPasscode.this, SecurityQuestions.class);
+                        intent.putExtra("set", "new");
                     startActivity(intent);
                     SetupPasscode.this.finish();
+                    }
+                    if(type.equals("Update")|| type.equals("Reset")){
+                        Intent intent = new Intent(SetupPasscode.this, Dashboard.class);
+                        startActivity(intent);
+                        SetupPasscode.this.finish();
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -98,7 +108,6 @@ public class SetupPasscode extends AppCompatActivity {
             });
 
         }
-
 
     }
 
