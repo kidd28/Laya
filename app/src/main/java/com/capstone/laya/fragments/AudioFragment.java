@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +111,10 @@ public class AudioFragment extends Fragment {
         bg = v.findViewById(R.id.bg);
         back = v.findViewById(R.id.back);
 
+        int mNoOfColumns = Utility.calculateNoOfColumns(getContext(),200);
+
         audioModels = new ArrayList<>();
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mNoOfColumns);
 
         rv.setLayoutManager(layoutManager);
 

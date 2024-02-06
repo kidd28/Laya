@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -200,9 +203,27 @@ public class Dashboard extends AppCompatActivity {
                 if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     currentOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                } else {
+
+                    Fragment fragment = new CategoryFragment(); // replace your custom fragment class
+                    Bundle bundle = new Bundle();
+
+                    FragmentTransaction fragmentTransaction = Dashboard.this.getSupportFragmentManager().beginTransaction();
+                    fragment.setArguments(bundle);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.fragmentView, fragment);
+                    fragmentTransaction.commit();;
+
+                } else if(currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+
+                    Fragment fragment = new CategoryFragment(); // replace your custom fragment class
+                    Bundle bundle = new Bundle();
+                    FragmentTransaction fragmentTransaction = Dashboard.this.getSupportFragmentManager().beginTransaction();
+                    fragment.setArguments(bundle);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.fragmentView, fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });

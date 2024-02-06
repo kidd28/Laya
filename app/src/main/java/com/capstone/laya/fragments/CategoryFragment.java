@@ -93,9 +93,9 @@ public class CategoryFragment extends Fragment {
         // Inflate the layout for this fragment
         rv = v.findViewById(R.id.rv);
         categoriesModels = new ArrayList<>();
-
+        int mNoOfColumns = Utility.calculateNoOfColumns(getContext(),200);
         sv = v.findViewById(R.id.sv);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mNoOfColumns);
 
 
         newlanguage = getActivity().getIntent().getStringExtra("Language");
