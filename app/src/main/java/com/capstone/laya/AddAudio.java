@@ -590,7 +590,7 @@ public class AddAudio extends AppCompatActivity {
     private void pickAudio() {
         Intent pickAudioIntent = new Intent();
         pickAudioIntent.setType("audio/*");
-        pickAudioIntent.setAction(Intent.ACTION_GET_CONTENT);
+        pickAudioIntent.setAction(Intent.ACTION_PICK);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
     }
 
