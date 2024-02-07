@@ -75,7 +75,7 @@ public class AddAudio extends AppCompatActivity {
     boolean words;
     String category;
 
-    ImageView AudioImage;
+    ImageView AudioImage,back;
     TextView audioname;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -101,9 +101,19 @@ public class AddAudio extends AppCompatActivity {
         AudioImage = findViewById(R.id.CatgoryImage);
         audioname = findViewById(R.id.audioname);
         name = findViewById(R.id.Name);
+        back = findViewById(R.id.back);
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
+                i.putExtra("Category", category);
+                startActivity(i);
+                finish();
+            }
+        });
 
         textToSpeechHelper = new TextToSpeechHelper(AddAudio.this, "Add");
 
@@ -164,8 +174,9 @@ public class AddAudio extends AppCompatActivity {
                                         requestPermissionforDR();
                                     }
                                 }
+                                showSelectLanguageDialog();
 
-                                showTTSDialog();
+
                                 break;
                         }
                     }
@@ -187,6 +198,26 @@ public class AddAudio extends AppCompatActivity {
                 save();
             }
         });
+    }
+
+    private void showSelectLanguageDialog() {
+        String option[] = {"Filipino", "English"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddAudio.this);
+        builder.setTitle("Select Language");
+        builder.setItems(option, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                showTTSDialog("Filipino");
+                                break;
+                            case 1:
+                                showTTSDialog("English");
+                                break;
+                        }
+                    }
+                });
+                builder.create().show();
     }
 
     private void showRecorder() {
@@ -233,7 +264,7 @@ public class AddAudio extends AppCompatActivity {
         AudioRecorderDialog.show();
     }
 
-    private void showTTSDialog() {
+    private void showTTSDialog(String language) {
         LayoutInflater inflater = LayoutInflater.from(AddAudio.this);
         View dialogview = inflater.inflate(R.layout.ttsdialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(AddAudio.this)
@@ -258,7 +289,7 @@ public class AddAudio extends AppCompatActivity {
                         String TTS = YouEditTextValue.getText().toString();
                         TTS = TTS.replaceAll("[^a-zA-Z0-9]", " ");
 
-                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Save");
+                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Save",language);
                         dialog.dismiss();
                     }
                 });
@@ -279,7 +310,7 @@ public class AddAudio extends AppCompatActivity {
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
                         TTS = TTS.replaceAll("[^a-zA-Z0-9]", " ");
-                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Play");
+                        textToSpeechHelper.startConvert(TTS, TTS + ".mp3", "Play",language);
                     }
                 });
             }

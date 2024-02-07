@@ -146,7 +146,6 @@ public class TextToSpeechHelper {
                 }else if(AddorEdit.equals("Edit")){
                     EditAudio editAudio = (EditAudio) context;
                     editAudio.uploadAduioFromTTS(uri,filename);
-
                 }
 
             }
@@ -154,8 +153,6 @@ public class TextToSpeechHelper {
 
 
     }
-
-
 
 
     public TextToSpeechHelper(Context context, String AddorEdit) {
@@ -196,7 +193,7 @@ public class TextToSpeechHelper {
      *
      * @param text The text to convert
      */
-    public void startConvert(String text,String filename, String Action) {
+    public void startConvert(String text,String filename, String Action, String language) {
 
         action = Action;
         localPath = new File(Environment.getExternalStorageDirectory()+"/AudioAAC",filename);
@@ -204,6 +201,7 @@ public class TextToSpeechHelper {
             Log.w(TAG, "API not ready. Ignoring the request.");
             return;
         }
+        if(language.equals("Filipino")){
             mApi.synthesizeSpeech(SynthesizeSpeechRequest.newBuilder()
                             .setInput(SynthesisInput.newBuilder()
                                     .setText(text))
@@ -214,6 +212,20 @@ public class TextToSpeechHelper {
                                     .setAudioEncoding(AudioEncoding.MP3))
                             .build(),
                     mSynthesizeSpeechResponseObserver);
+        }else if (language.equals("English")){
+            mApi.synthesizeSpeech(SynthesizeSpeechRequest.newBuilder()
+                            .setInput(SynthesisInput.newBuilder()
+                                    .setText(text))
+                            .setVoice(VoiceSelectionParams.newBuilder()
+                                    .setLanguageCode("en-US")
+                                    .setName("en-US-Standard-C")
+                                    .setSsmlGender(SsmlVoiceGender.FEMALE))
+                            .setAudioConfig(AudioConfig.newBuilder()
+                                    .setAudioEncoding(AudioEncoding.MP3))
+                            .build(),
+                    mSynthesizeSpeechResponseObserver);
+        }
+
     }
 
     private final Runnable mFetchAccessTokenRunnable = new Runnable() {

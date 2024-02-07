@@ -242,10 +242,7 @@ public class AudioFragment extends Fragment {
 
     }
 
-
     private void loadAudioAddedbyUser() {
-
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
@@ -260,17 +257,13 @@ public class AudioFragment extends Fragment {
                 AudioAdapter audioAdapter = new AudioAdapter(getActivity(), audioModels);
                 rv.setAdapter(audioAdapter);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-
     }
 
     private void loadAudio(String language) {
-
         if (language.equals("English")) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("English");
             reference.keepSynced(true);

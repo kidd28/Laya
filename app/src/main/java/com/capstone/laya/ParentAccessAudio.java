@@ -84,6 +84,7 @@ public class ParentAccessAudio extends AppCompatActivity {
     }
     private void loadAudioAddedbyUser() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

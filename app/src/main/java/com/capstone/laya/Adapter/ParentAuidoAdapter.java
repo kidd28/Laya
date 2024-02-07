@@ -134,15 +134,19 @@ public class ParentAuidoAdapter extends RecyclerView.Adapter<ParentAuidoAdapter.
                     @Override
                     public void onSuccess(Void unused) {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid()).child(Name);
-                        reference.removeValue();
-                        context.startActivity(new Intent(context, ParentalAccess.class));
-                        ((Activity) context).finish();
+                        reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                context.startActivity(new Intent(context, ParentalAccess.class));
+                                ((Activity) context).finish();
+                            }
+                        });
+
                     }
                 });
             }
         });
     }
-
     @Override
     public int getItemCount() {
         return audioModels.size();

@@ -64,7 +64,7 @@ public class EditAudio extends AppCompatActivity {
     private static final int REQUEST_AUDIO_PERMISSION = 102;
     private static final int PERMISSION_REQUEST_CODE = 1;
     Button uploadAudio, uploadImage;
-    ImageView AudioImage, upload;
+    ImageView AudioImage, upload, back;
     TextView audioname;
 
     EditText name;
@@ -92,6 +92,7 @@ public class EditAudio extends AppCompatActivity {
         upload = findViewById(R.id.upload);
         AudioImage = findViewById(R.id.Image);
         audioname = findViewById(R.id.audioname);
+        back = findViewById(R.id.back);
         user = FirebaseAuth.getInstance().getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
@@ -106,6 +107,15 @@ public class EditAudio extends AppCompatActivity {
         UserUID = getIntent().getExtras().getString("UserUID");
 
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
+                i.putExtra("Category", Category);
+                startActivity(i);
+                finish();
+            }
+        });
         textToSpeechHelper = new TextToSpeechHelper(EditAudio.this, "Edit");
 
         audioname.setText(FileName);
@@ -157,16 +167,17 @@ public class EditAudio extends AppCompatActivity {
                                 }
                                 break;
                             case 2:
-                                if (ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                                        != PackageManager.PERMISSION_GRANTED ||
-                                        ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                                != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(EditAudio.this,
-                                            new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                            REQUEST_STORAGE_PERMISSION);
-                                }else {
-                                    showTTSDialog();
+                                File myDirectory = new File(Environment.getExternalStorageDirectory(), "/AudioAAC");
+                                if (!myDirectory.exists()) {
+                                    checkPermissionForDir();
+                                    if (checkPermissionForDir()) {
+                                        myDirectory.mkdirs();
+
+                                    } else {
+                                        requestPermissionforDR();
+                                    }
                                 }
+                                showSelectLanguageDialog();
                                 break;
                         }
                     }
@@ -185,57 +196,64 @@ public class EditAudio extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (name.getText().toString().equals(Name)) {
-                    Save();
-                } else {
+                if(name.getText().toString().equals("") || name.getText().toString().equals(null)){
+                    Toast.makeText(EditAudio.this, "Please enter AAC name", Toast.LENGTH_SHORT).show();
+                }else{
                     SaveNew();
                 }
             }
         });
     }
+    private void showSelectLanguageDialog() {
+        String option[] = {"Filipino", "English"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditAudio.this);
+        builder.setTitle("Select Language");
+        builder.setItems(option, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        showTTSDialog("Filipino");
+                        break;
+                    case 1:
+                        showTTSDialog("English");
+                        break;
+                }
+            }
+        });
+        builder.create().show();
 
+    }
     private void SaveNew() {
         String id = String.valueOf(System.currentTimeMillis());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("Name", name.getText().toString());
-        hashMap.put("Category", Category);
-        hashMap.put("FilePath", FilePath);
-        hashMap.put("FileName", FileName);
-        hashMap.put("FileLink", FileLink);
-        hashMap.put("UserUID", UserUID);
-        hashMap.put("Id", id);
-        reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child(Name).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                reference.child(Name).removeValue();
-                Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
-                i.putExtra("Category", Category);
-                startActivity(i);
-                finish();
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("Name", name.getText().toString());
+                hashMap.put("Category", Category);
+                hashMap.put("FilePath", FilePath);
+                hashMap.put("FileName", FileName);
+                hashMap.put("FileLink", FileLink);
+                hashMap.put("ImageLink", ImageLink);
+                hashMap.put("UserUID", UserUID);
+                hashMap.put("Id", id);
+                reference.child(name.getText().toString()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
+                        i.putExtra("Category", Category);
+                        startActivity(i);
+                        finish();
+                    }
+                });
             }
         });
+
     }
 
-    private void Save() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("AudioAddedByUser").child(user.getUid());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("Name", Name);
-        hashMap.put("Category", Category);
-        hashMap.put("FilePath", FilePath);
-        hashMap.put("FileName", FileName);
-        hashMap.put("FileLink", FileLink);
-        hashMap.put("ImageLink", ImageLink);
-        hashMap.put("UserUID", UserUID);
-        reference.child(Name).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
-                i.putExtra("Category", Category);
-                startActivity(i);
-            }
-        });
-    }
+
     private void SelectImage() {
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
@@ -425,9 +443,9 @@ public class EditAudio extends AppCompatActivity {
         }
     }
 
-    private void showTTSDialog() {
+    private void showTTSDialog(String language1) {
         LayoutInflater inflater = LayoutInflater.from(EditAudio.this);
-        View dialogview = inflater.inflate(R.layout.dialog, null);
+        View dialogview = inflater.inflate(R.layout.ttsdialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(EditAudio.this)
                 .setView(dialogview)
                 .setTitle("Input new AAC word")
@@ -445,11 +463,11 @@ public class EditAudio extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         //What ever you want to do with the value
-                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etTTS);
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
 
-                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Save");
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Save",language1);
                         dialog.dismiss();
                     }
                 });
@@ -469,7 +487,7 @@ public class EditAudio extends AppCompatActivity {
                         EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
-                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play");
+                        textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play",language1);
                     }
                 });
             }
@@ -542,5 +560,32 @@ public class EditAudio extends AppCompatActivity {
             }
         });
         AudioRecorderDialog.show();
+    }
+    private void requestPermissionforDR() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 2296);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 2296);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(EditAudio.this, new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private boolean checkPermissionForDir() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(EditAudio.this, READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(EditAudio.this, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        }
     }
 }
