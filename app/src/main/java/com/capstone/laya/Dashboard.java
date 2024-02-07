@@ -1,7 +1,15 @@
 package com.capstone.laya;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_AUDIO;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.READ_MEDIA_VIDEO;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.PendingIntent.getActivity;
 import static android.content.ContentValues.TAG;
+import static android.os.Build.VERSION.SDK_INT;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -103,6 +111,8 @@ public class Dashboard extends AppCompatActivity {
     MediaPlayer mp;
     MediaPlayer mp2;
     TextView hellouser;
+    String[] permissions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +238,19 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        if (SDK_INT>=33){
+            permissions = new String[]{
+                    READ_MEDIA_VIDEO,
+                    READ_MEDIA_IMAGES,
+                    READ_MEDIA_AUDIO,
+                    CAMERA,RECORD_AUDIO
+            };
+        }else {
+            permissions = new String[]{
+                    READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,RECORD_AUDIO
+            };
+        }
+
         if (checkStoragePermissions()) {
             download();
         } else {
@@ -279,10 +302,7 @@ public class Dashboard extends AppCompatActivity {
             }else{
                 ActivityCompat.requestPermissions(
                         this,
-                        new String[]{
-                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                android.Manifest.permission.READ_EXTERNAL_STORAGE
-                        },
+                        permissions,
                         STORAGE_PERMISSION_CODE11
                 );
             }
@@ -290,10 +310,7 @@ public class Dashboard extends AppCompatActivity {
             //Below android 11
             ActivityCompat.requestPermissions(
                     this,
-                    new String[]{
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            android.Manifest.permission.READ_EXTERNAL_STORAGE
-                    },
+                    permissions,
                     STORAGE_PERMISSION_CODE
             );
         }

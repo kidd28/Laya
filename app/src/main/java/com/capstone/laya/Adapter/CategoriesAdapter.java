@@ -21,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.capstone.laya.fragments.AudioFragment;
 import com.capstone.laya.Model.CategoriesModel;
 import com.capstone.laya.R;
-import com.capstone.laya.fragments.CategoryFragment;
 
 import java.util.ArrayList;
 

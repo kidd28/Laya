@@ -15,10 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.capstone.laya.Adapter.CategoriesAdapter;
-import com.capstone.laya.Adapter.ParentCategoryAdapter;
-import com.capstone.laya.Dashboard;
 import com.capstone.laya.Model.CategoriesModel;
-import com.capstone.laya.ParentalAccess;
 import com.capstone.laya.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

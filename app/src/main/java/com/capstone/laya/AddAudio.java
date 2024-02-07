@@ -557,7 +557,7 @@ public class AddAudio extends AppCompatActivity {
             case REQUEST_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Storage permissions granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please select file", Toast.LENGTH_SHORT).show();
                     pickAudio();
                 } else {
                     Toast.makeText(this, "Storage permissions denied", Toast.LENGTH_SHORT).show();
@@ -569,7 +569,7 @@ public class AddAudio extends AppCompatActivity {
                     boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                        Toast.makeText(this, "Storage permissions granted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please select file", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Storage permissions denied", Toast.LENGTH_SHORT).show();
                     }

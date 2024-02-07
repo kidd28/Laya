@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,10 +47,10 @@ public class ParentalAccess extends AppCompatActivity {
     ImageView back, add;
     RecyclerView rv;
     ParentCategoryAdapter adapter;
-    ArrayList<CategoriesModel> categoriesModels;
+    ArrayList<CategoriesModel> categoriesModelArrayList;
     FirebaseUser user;
     String language;
-
+    static boolean isInit = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +66,17 @@ public class ParentalAccess extends AppCompatActivity {
         Glide.with(this).load(R.drawable.back).centerCrop().into(back);
         Glide.with(this).load(R.drawable.add).centerCrop().into(add);
 
+        if(isInit) {
+            System.out.println("reloaded");
+            isInit = false;
+            startActivity(new Intent(this, ParentalAccess.class));
+            finish();
+            Log.d("Restart", "asdasda");
+        }
 
         rv = findViewById(R.id.rview);
 
-        categoriesModels = new ArrayList<>();
+        categoriesModelArrayList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
 
@@ -88,7 +96,7 @@ public class ParentalAccess extends AppCompatActivity {
                 finish();
             }
         });
-
+        categoriesModelArrayList.clear();
         loadCategories();
         loadCategoriesAddedbyUser();
     }
@@ -101,9 +109,9 @@ public class ParentalAccess extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     CategoriesModel model = snap.getValue(CategoriesModel.class);
-                    categoriesModels.add(model);
+                    categoriesModelArrayList.add(model);
                 }
-                ParentCategoryAdapter categoriesAdapter = new ParentCategoryAdapter(ParentalAccess.this, categoriesModels);
+                ParentCategoryAdapter categoriesAdapter = new ParentCategoryAdapter(ParentalAccess.this, categoriesModelArrayList);
                 rv.setAdapter(categoriesAdapter);
             }
             @Override
@@ -123,9 +131,9 @@ public class ParentalAccess extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         CategoriesModel model = snap.getValue(CategoriesModel.class);
-                        categoriesModels.add(model);
+                        categoriesModelArrayList.add(model);
                     }
-                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModels);
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModelArrayList);
                     rv.setAdapter(categoriesAdapter);
                 }
                 @Override
@@ -141,15 +149,21 @@ public class ParentalAccess extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         CategoriesModel model = snap.getValue(CategoriesModel.class);
-                        categoriesModels.add(model);
+                        categoriesModelArrayList.add(model);
                     }
-                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModels);
+                    CategoriesAdapter categoriesAdapter = new CategoriesAdapter(ParentalAccess.this, categoriesModelArrayList);
                     rv.setAdapter(categoriesAdapter);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 

@@ -1,6 +1,10 @@
 package com.capstone.laya;
 
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_AUDIO;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.READ_MEDIA_VIDEO;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
@@ -81,6 +85,8 @@ public class EditAudio extends AppCompatActivity {
     boolean upImg, upAudio;
     private TextToSpeechHelper textToSpeechHelper;
     AudioRecorderView recordView;
+    String[] permissions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +122,19 @@ public class EditAudio extends AppCompatActivity {
                 finish();
             }
         });
+
+        if (SDK_INT>=33){
+            permissions = new String[]{
+                    READ_MEDIA_VIDEO,
+                    READ_MEDIA_IMAGES,
+                    READ_MEDIA_AUDIO,
+                    CAMERA,RECORD_AUDIO
+            };
+        }else {
+            permissions = new String[]{
+                    READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,RECORD_AUDIO
+            };
+        }
         textToSpeechHelper = new TextToSpeechHelper(EditAudio.this, "Edit");
 
         audioname.setText(FileName);
@@ -137,33 +156,29 @@ public class EditAudio extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i) {
                             case 0:
-                                if (ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                                if (ContextCompat.checkSelfPermission(EditAudio.this, READ_EXTERNAL_STORAGE)
                                         != PackageManager.PERMISSION_GRANTED ||
-                                        ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        ContextCompat.checkSelfPermission(EditAudio.this,WRITE_EXTERNAL_STORAGE)
                                                 != PackageManager.PERMISSION_GRANTED) {
                                     ActivityCompat.requestPermissions(EditAudio.this,
-                                            new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            permissions,
                                             REQUEST_STORAGE_PERMISSION);
-                                }else {
+                                } else {
                                     pickAudio();
                                 }
                                 break;
+
                             case 1:
                                 if (ContextCompat.checkSelfPermission(EditAudio.this, RECORD_AUDIO)
-                                        != PackageManager.PERMISSION_GRANTED) {
+                                        != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(EditAudio.this,READ_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED ||
+                                        ContextCompat.checkSelfPermission(EditAudio.this, WRITE_EXTERNAL_STORAGE)
+                                                != PackageManager.PERMISSION_GRANTED) {
                                     ActivityCompat.requestPermissions(EditAudio.this, new String[]{RECORD_AUDIO},
                                             REQUEST_AUDIO_PERMISSION);
                                 } else {
-                                    if (ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                                            != PackageManager.PERMISSION_GRANTED ||
-                                            ContextCompat.checkSelfPermission(EditAudio.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                                    != PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(EditAudio.this,
-                                                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                REQUEST_STORAGE_PERMISSION);
-                                    }else {
-                                        showRecorder();
-                                    }
+                                    showRecorder();
+
                                 }
                                 break;
                             case 2:
@@ -269,7 +284,8 @@ public class EditAudio extends AppCompatActivity {
             case REQUEST_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Storage permissions granted",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please select file",Toast.LENGTH_SHORT).show();
+                    pickAudio();
                 } else {
                     Toast.makeText(this, "Storage permissions denied",Toast.LENGTH_SHORT).show();
                 }
@@ -280,7 +296,7 @@ public class EditAudio extends AppCompatActivity {
                     boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                        Toast.makeText(this, "Storage permissions granted",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please select file",Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Storage permissions denied",Toast.LENGTH_SHORT).show();
                     }
@@ -298,7 +314,9 @@ public class EditAudio extends AppCompatActivity {
     }
 
     private void pickAudio() {
-        Intent pickAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Intent pickAudioIntent = new Intent();
+        pickAudioIntent.setType("audio/*");
+        pickAudioIntent.setAction(Intent.ACTION_PICK);
         startActivityForResult(pickAudioIntent, REQUEST_PICK_AUDIO);
     }
 

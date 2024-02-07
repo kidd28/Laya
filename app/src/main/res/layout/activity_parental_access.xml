@@ -43,7 +43,6 @@
                 android:layout_height="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_20sdp"
                 android:src="@drawable/add" />
-
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
@@ -59,7 +58,6 @@
             android:fontFamily="@font/handosoftbold"
             android:textSize="@dimen/_25sdp"
             android:textStyle="bold" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
