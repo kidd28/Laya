@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("email", account.getEmail());//send email value in next activity
                                 intent.putExtra("uid", user1.getUid());//send uid value in next activity
                                 intent.putExtra("name", account.getDisplayName().substring(0, 1).toUpperCase() + account.getDisplayName().substring(1).toLowerCase());//send name value in next activity
+                                intent.putExtra("language", language);
                                 startActivity(intent);
                                 finish();
                             } else {

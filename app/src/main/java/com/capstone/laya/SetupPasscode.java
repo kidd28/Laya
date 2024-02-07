@@ -35,7 +35,7 @@ public class SetupPasscode extends AppCompatActivity {
     CardView next;
     String pin;
     String type;
-    TextView error,done,setup;
+    TextView error,done,setup,conPass,entPass,nxttv;
     String language;
 
     @Override
@@ -48,20 +48,37 @@ public class SetupPasscode extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(SetupPasscode.this, gso);
 
         language = PreferenceManager.getDefaultSharedPreferences(SetupPasscode.this).getString("Language", "English");
+
         pinView1 = findViewById(R.id.firstPinView);
         pinView2 = findViewById(R.id.SecondPinView);
         error = findViewById(R.id.error);
         done = findViewById(R.id.done);
         setup = findViewById(R.id.setup);
+        entPass = findViewById(R.id.entPass);
+        conPass = findViewById(R.id.conPass);
         next = findViewById(R.id.next);
+        nxttv = findViewById(R.id.nxttv);
 
 
         type = getIntent().getStringExtra("Type");
         if(type.equals("Update")|| type.equals("Reset")){
             done.setVisibility(View.GONE);
-            setup.setText("Enter new passcode");
+            if (language.equals("Filipino")) {
+                setup.setText("Maglagay ng bagong Pin");
+            } else {
+                setup.setText("Enter new passcode");
+            }
+
         }
 
+
+        if (language.equals("Filipino")) {
+            done.setText("Tayo'y malapit na, Magpatuloy!");
+            setup.setText("Gumawa ng Passcode");
+            entPass.setText("Maglagay ng Passcode");
+            conPass.setText("Kumpirmahin ang Passcode");
+            nxttv.setText("Magpatuloy");
+        }
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +108,7 @@ public class SetupPasscode extends AppCompatActivity {
                     if(type.equals("New")){
                     Intent intent = new Intent(SetupPasscode.this, SecurityQuestions.class);
                         intent.putExtra("set", "new");
+                        intent.putExtra("language", language);
                     startActivity(intent);
                     SetupPasscode.this.finish();
                     }
@@ -118,6 +136,8 @@ public class SetupPasscode extends AppCompatActivity {
             }
         });
     }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.capstone.laya.Model.AudioModel;
@@ -43,11 +44,12 @@ public class SecurityQuestions extends AppCompatActivity {
     String[] Filquestions3 = {"Ano ang paborito mong pagkain noong bata ka pa?", "Saan mo nakilala ang iyong asawa?", "Anong taon ipinanganak ang iyong ama?"};
     Spinner q1, q2, q3;
 
+    TextView qtv1,qtv2,qtv3;
     EditText ans1, ans2, ans3;
 
     Button save;
 
-    String set;
+    String set,language;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,25 +61,50 @@ public class SecurityQuestions extends AppCompatActivity {
         ans1 = findViewById(R.id.answer1);
         ans2 = findViewById(R.id.answer2);
         ans3 = findViewById(R.id.answer3);
+        qtv1 = findViewById(R.id.q1);
+        qtv2 = findViewById(R.id.q2);
+        qtv3 = findViewById(R.id.q3);
         save = findViewById(R.id.save);
 
         set = getIntent().getStringExtra("set");
+        language = getIntent().getStringExtra("language");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(SecurityQuestions.this, gso);
-        ArrayAdapter ad1 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions1);
-        ad1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        ArrayAdapter ad2 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions2);
-        ad2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if(language.equals("Filipino")){
+            save.setText("Magpatuloy");
+            qtv1.setText("Unang tanong: ");
+            qtv2.setText("Pangalawang tanong: ");
+            qtv3.setText("Pangatlong tanong:");
+            ans1.setHint("Sagot");
+            ans2.setHint("Sagot");
+            ans3.setHint("Sagot");
+            ArrayAdapter ad1 = new ArrayAdapter(this, R.layout.custom_selected_question, Filquestions1);
+            ad1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter ad2 = new ArrayAdapter(this, R.layout.custom_selected_question, Filquestions2);
+            ad2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter ad3 = new ArrayAdapter(this, R.layout.custom_selected_question, Filquestions3);
+            ad3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            q1.setAdapter(ad1);
+            q2.setAdapter(ad2);
+            q3.setAdapter(ad3);
 
-        ArrayAdapter ad3 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions3);
-        ad3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }else{
+            ArrayAdapter ad1 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions1);
+            ad1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        q1.setAdapter(ad1);
-        q2.setAdapter(ad2);
-        q3.setAdapter(ad3);
+            ArrayAdapter ad2 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions2);
+            ad2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            ArrayAdapter ad3 = new ArrayAdapter(this, R.layout.custom_selected_question, Engquestions3);
+            ad3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            q1.setAdapter(ad1);
+            q2.setAdapter(ad2);
+            q3.setAdapter(ad3);
+        }
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -154,6 +181,8 @@ public class SecurityQuestions extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     public void onBackPressed() {

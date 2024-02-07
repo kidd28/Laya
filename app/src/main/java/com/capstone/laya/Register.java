@@ -38,7 +38,7 @@ import java.util.Locale;
 public class Register extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     EditText  name,dob;
     CardView register;
-    TextView email;
+    TextView email,regtv,confirmtv;
 
     FirebaseDatabase database;
     GoogleSignInClient mGoogleSignInClient;
@@ -51,6 +51,8 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
 
     ImageView calendar;
     RadioButton rbMale, rbFemale;
+    String language;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,10 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         register = findViewById(R.id.Register);
         rbMale = findViewById(R.id.rbMale);
         rbFemale = findViewById(R.id.rbFemale);
+        regtv = findViewById(R.id.regtv);
+        confirmtv = findViewById(R.id.confirmtv);
+
+        language = getIntent().getStringExtra("language").toString();
 
         Email = getIntent().getStringExtra("email");
         Name = getIntent().getStringExtra("name").toUpperCase(Locale.ROOT);
@@ -75,6 +81,18 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
 
         email.setText(Email);
         name.setText(Name);
+
+
+        if(language.equals("Filipino")){
+            regtv.setText("Halina't mag pakilala");
+           name.setHint("Anong gusto mong itawag sa iyo?");
+           dob.setHint("Araw ng kapanganakan");
+           rbFemale.setText("Babae");
+           rbMale.setText("Lalaki");
+            confirmtv.setText("Magpatuloy");
+        }else{
+            regtv.setText("Let's create a profile!");
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(Register.this, gso);
@@ -162,6 +180,13 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
 
     @Override
     public void onBackPressed() {

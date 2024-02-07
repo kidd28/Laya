@@ -126,8 +126,40 @@ public class AudioFragment extends Fragment {
             // System.out.println(category);
             cat.setText(category);
         }
+        loadBgColor();
 
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                language = "" + snapshot.child("Language").getValue();
 
+                    if (language.equals("Filipino")) {
+                        sv.setQueryHint("Maghanap ng AAC");
+                    }else {
+                        sv.setQueryHint("Search AAC");
+                    }
+                loadAudio(language);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CategoryFragment(); // replace your custom fragment class
+                Bundle bundle = new Bundle();
+                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                System.out.println(category);
+                bundle.putString("Category", category); // use as per your need
+                fragment.setArguments(bundle);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.fragmentView, fragment);
+                fragmentTransaction.commit();
+            }
+        });
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -152,35 +184,7 @@ public class AudioFragment extends Fragment {
             }
         });
 
-        loadBgColor();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                language = "" + snapshot.child("Language").getValue();
-                loadAudio(language);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new CategoryFragment(); // replace your custom fragment class
-                Bundle bundle = new Bundle();
-                FragmentTransaction fragmentTransaction = ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction();
-                System.out.println(category);
-                bundle.putString("Category", category); // use as per your need
-                fragment.setArguments(bundle);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.fragmentView, fragment);
-                fragmentTransaction.commit();
-            }
-        });
 
         return v;
     }

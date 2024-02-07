@@ -29,6 +29,7 @@ public class OnboardingThird extends Fragment {
     CardView next ;
     String newItem;
     TextView Title, SubTitle,btntext;
+    String language;
 
     private  IntroPref introPref;
     // TODO: Rename parameter arguments, choose names that match
@@ -84,7 +85,7 @@ public class OnboardingThird extends Fragment {
         SubTitle = v.findViewById(R.id.SubTitle);
         btntext = v.findViewById(R.id.btntext);
 
-        String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("Language", "English");
+        language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("Language", "English");
 
         if(language.equals("Filipino")){
             Title.setText("ACCESS NG MAGULANG");
@@ -101,6 +102,7 @@ public class OnboardingThird extends Fragment {
             public void onClick(View view) {
                 introPref.setIsFirstTimeLaunch(false);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
+
                 startActivity(intent);
                 getActivity().finish();
 

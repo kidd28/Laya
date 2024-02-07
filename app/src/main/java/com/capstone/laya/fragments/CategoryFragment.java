@@ -90,7 +90,7 @@ public class CategoryFragment extends Fragment {
         // Inflate the layout for this fragment
         rv = v.findViewById(R.id.rv);
         categoriesModels = new ArrayList<>();
-        int mNoOfColumns = Utility.calculateNoOfColumns(getContext(),200);
+        int mNoOfColumns = Utility.calculateNoOfColumns(getContext(), 200);
         sv = v.findViewById(R.id.sv);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mNoOfColumns);
 
@@ -104,16 +104,31 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 language = "" + snapshot.child("Language").getValue();
-
-
                 if (newlanguage != null) {
                     if (!newlanguage.equals(language)) {
                         setLanguage(newlanguage);
-                    }else {
+                    } else {
                         loadCategories(language);
                     }
-                }else {
+
+                    if (newlanguage.equals("Filipino")) {
+                        sv.setIconifiedByDefault(false);
+                        sv.setQueryHint("Maghanap ng kategorya");
+                    } else {
+                        sv.setIconifiedByDefault(false);
+                        sv.setQueryHint("Search Category");
+                    }
+
+                } else {
                     loadCategories(language);
+
+                    if (language.equals("Filipino")) {
+                        sv.setIconifiedByDefault(false);
+                        sv.setQueryHint("Maghanap ng kategorya");
+                    } else {
+                        sv.setIconifiedByDefault(false);
+                        sv.setQueryHint("Search Category");
+                    }
                 }
             }
 
@@ -123,6 +138,8 @@ public class CategoryFragment extends Fragment {
             }
         });
         rv.setLayoutManager(layoutManager);
+
+
 
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

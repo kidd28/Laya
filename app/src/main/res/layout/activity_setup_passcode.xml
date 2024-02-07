@@ -49,6 +49,7 @@
         android:textSize="@dimen/_15sdp" />
 
     <TextView
+        android:id="@+id/entPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -80,6 +81,7 @@
         app:viewType="rectangle" />
 
     <TextView
+        android:id="@+id/conPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -122,6 +124,7 @@
         app:cardElevation="0dp">
 
       <TextView
+          android:id="@+id/nxttv"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"

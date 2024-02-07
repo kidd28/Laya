@@ -88,6 +88,9 @@
         app:cardElevation="0dp">
 
         <TextView
+            android:gravity="center"
+            android:textAlignment="center"
+            android:id="@+id/custtv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Customize AAC"

@@ -25,9 +25,7 @@
                 app:queryBackground="@android:color/transparent"
                 android:iconifiedByDefault="false"
                 app:iconifiedByDefault="false"
-                app:defaultQueryHint="Search Category"
                 android:layout_width="match_parent"
-                android:queryHint="Search Here"
                 android:layout_height="wrap_content"/>
         </androidx.cardview.widget.CardView>
 

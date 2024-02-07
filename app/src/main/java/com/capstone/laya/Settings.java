@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,10 +54,11 @@ public class Settings extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     CardView parentalacess;
-    TextView name, email, account, language, passcode, feedback, about;
+    TextView name, email, account, language, passcode, feedback, about,how,custtv;
     CircleImageView pfp;
 
     ImageView backwhite;
+    String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +74,12 @@ public class Settings extends AppCompatActivity {
         account = findViewById(R.id.account);
         language = findViewById(R.id.language);
         passcode = findViewById(R.id.passcode);
+        how = findViewById(R.id.how);
         feedback = findViewById(R.id.feedback);
         about = findViewById(R.id.about);
+        custtv = findViewById(R.id.custtv);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
         parentalacess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +87,29 @@ public class Settings extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                lang = "" + snapshot.child("Language").getValue();
+                if(lang.equals("Filipino")){
+                    account.setText("Account");
+                    language.setText("Lengguwahe");
+                    passcode.setText("I-set up ang passcode");
+                    how.setText("Paano gamitin");
+                    feedback.setText("Katugunan at Rekomendasyon");
+                    logout.setText("Mag Sign out");
+                    custtv.setText("I-customize ang AAC");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,6 +178,7 @@ public class Settings extends AppCompatActivity {
             }
         });
         user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         loadUserprofile();
     }
