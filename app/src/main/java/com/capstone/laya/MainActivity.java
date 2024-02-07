@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
     CardView Login;
-
+    TextView welcome;
+    TextView subtext;
     TextView btntext;
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //initialize variables
         Login = findViewById(R.id.login);
+        subtext = findViewById(R.id.subtext);
+        welcome = findViewById(R.id.welcome);
         btntext = findViewById(R.id.btntext);
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Loading..."); // Setting Message
@@ -69,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(language.equals("Filipino")){
 
-            btntext.setText("Magsiluma");
+            btntext.setText("Magsimula");
+            welcome.setText("Mabuhay!");
+            subtext.setText("Halina't mag-usap!");
 
         } else if (language.equals("English")) {
             btntext.setText("Get Started");

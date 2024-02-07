@@ -39,9 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Please select Language"
+            android:text="LANGUAGE SELECTION"
             android:textColor="@color/black"
-            android:textSize="25dp"
+            android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
 
         <Spinner
@@ -49,17 +49,18 @@
             android:layout_width="@dimen/_200sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_10sdp" />
+            android:layout_marginTop="@dimen/_15sdp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/next"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/_45sdp"
             android:layout_marginLeft="@dimen/_50sdp"
             android:layout_marginTop="@dimen/_60sdp"
             android:layout_marginRight="@dimen/_50sdp"
-            android:backgroundTint="@color/fontblue"
+            android:backgroundTint="@color/white"
             app:cardCornerRadius="@dimen/_22sdp"
+            android:layout_gravity="right"
             app:cardElevation="0dp">
             <TextView
                 android:id="@+id/btntext"
@@ -68,7 +69,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/handosoftbold"
                 android:text="Next"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_18sdp" />
 
         </androidx.cardview.widget.CardView>

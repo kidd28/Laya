@@ -47,33 +47,35 @@
                 android:id="@+id/SubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="annyeong haseyo"
+                android:text="Discover a wide array of words sorted for easy access and enhanced communication."
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="18dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginLeft="@dimen/_23sdp"
+                android:layout_marginRight="@dimen/_23sdp"
                 android:textStyle="bold"/>
 
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/next"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginLeft="@dimen/_50sdp"
                 android:layout_marginTop="@dimen/_60sdp"
                 android:layout_marginRight="@dimen/_50sdp"
-                android:backgroundTint="@color/fontblue"
+                android:backgroundTint="@color/white"
                 app:cardCornerRadius="@dimen/_22sdp"
+                android:layout_gravity="right"
                 app:cardElevation="0dp">
                 <TextView
                     android:id="@+id/btntext"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/handosoftbold"
                     android:text="Next"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />
 
             </androidx.cardview.widget.CardView>

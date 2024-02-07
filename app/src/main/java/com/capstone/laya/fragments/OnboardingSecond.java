@@ -83,12 +83,12 @@ public class OnboardingSecond extends Fragment {
 
 
         if(language.equals("Filipino")){
-            Title.setText("Tagalog");
-            SubTitle.setText("Tagalog");
-            btntext.setText("Magpatuloy");
+            Title.setText("KATEGORYA");
+            SubTitle.setText("Tuklasin ang mga salitang nakaayos sa iba't ibang kategorya");
+            btntext.setText("Sunod");
         } else if (language.equals("English")) {
-            Title.setText("English");
-            SubTitle.setText("English");
+            Title.setText("CATEGORIZED WORDS");
+            SubTitle.setText("Discover a wide array of words sorted for easy access and enhanced communication.");
             btntext.setText("Next");
         }
         next.setOnClickListener(new View.OnClickListener() {

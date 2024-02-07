@@ -87,13 +87,13 @@ public class OnboardingThird extends Fragment {
         String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("Language", "English");
 
         if(language.equals("Filipino")){
-            Title.setText("Tagalog");
-            SubTitle.setText("Tagalog");
-            btntext.setText("Magpatuloy");
+            Title.setText("ACCESS NG MAGULANG");
+            SubTitle.setText("Maglagay ng passcode para sa eksklusibong kontrol ng magulang lamang.");
+            btntext.setText("Sunod");
 
         } else if (language.equals("English")) {
-            Title.setText("English");
-            SubTitle.setText("English");
+            Title.setText("PARENTAL ACCESS");
+            SubTitle.setText("Set up a passcode for exclusive control and peace of mind.");
             btntext.setText("Next");
         }
         next.setOnClickListener(new View.OnClickListener() {

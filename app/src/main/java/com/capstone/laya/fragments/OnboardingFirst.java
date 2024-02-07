@@ -102,10 +102,10 @@ public class OnboardingFirst extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 newItem = states.get(i);
                 if(newItem.equals("Filipino")){
-                    language.setText("Mangyaring pumili ng wika");
-                    btntext.setText("Magpatuloy");
+                    language.setText("PAGPILI NG LENGHAWE");
+                    btntext.setText("Sunod");
                 } else if (newItem.equals("English")) {
-                    language.setText("Please select Language");
+                    language.setText("LANGUAGE SELECTION");
                     btntext.setText("Next");
                 }
             }
