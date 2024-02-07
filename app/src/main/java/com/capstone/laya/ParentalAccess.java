@@ -66,7 +66,7 @@ public class ParentalAccess extends AppCompatActivity {
         Glide.with(this).load(R.drawable.add).centerCrop().into(add);
 
 
-        rv = findViewById(R.id.rv);
+        rv = findViewById(R.id.rview);
 
         categoriesModels = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

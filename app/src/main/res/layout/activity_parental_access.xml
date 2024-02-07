@@ -63,8 +63,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rv"
-            android:divider="@null"/>
+            android:id="@+id/rview"/>
     </LinearLayout>
 
 
