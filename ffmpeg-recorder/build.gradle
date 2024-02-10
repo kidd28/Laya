@@ -1,0 +1,119 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.jfrog.bintray'
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/library_release.kotlin_module'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'nl.bravobit:android-ffmpeg:1.1.5'
+    implementation project(':core')
+}
+
+
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'NaraeAudioRecorder-FFmpeg-Recorder'
+    orgName = 'windsekirun'
+
+    publishedGroupId = 'com.github.WindSekirun.NaraeAudioRecorder'
+    libraryName = 'NaraeAudioRecorder'
+    artifact = 'ffmpeg-recorder'
+
+    libraryDescription = 'AudioRecorder for Android powered by Kotlin'
+
+    siteUrl = 'https://github.com/WindSekirun/NaraeAudioRecorder'
+    gitUrl = 'https://github.com/WindSekirun/NaraeAudioRecorder.git'
+
+    libraryVersion = rootProject.ext.libraryVersion
+
+    developerId = 'WindSekirun'
+    developerName = 'WindSekirun'
+    developerEmail = 'pyxis@uzuki.live'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+version = libraryVersion
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+def _user = System.getenv("BINTRAY_USER")
+def _key = System.getenv("BINTRAY_API_KEY")
+def _passphrase = System.getenv("BINTRAY_PASSPHRASE")
+
+if (project.rootProject.file('local.properties').exists() && (_user == null || _user.isEmpty())) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    _user = properties.getProperty("bintray.user")
+    _key = properties.getProperty("bintray.apikey");
+    _passphrase = properties.getProperty("bintray.gpg.password")
+}
+
+bintray {
+    user = _user
+    key = _key
+    override = true
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        userOrg = orgName
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+            gpg {
+                sign = false
+            }
+        }
+    }
+}
+
+group = publishedGroupId
+
