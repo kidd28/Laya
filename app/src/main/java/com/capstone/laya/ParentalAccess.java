@@ -57,6 +57,7 @@ public class ParentalAccess extends AppCompatActivity {
         setContentView(R.layout.activity_parental_access);
 
 
+
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
 
@@ -70,6 +71,7 @@ public class ParentalAccess extends AppCompatActivity {
             System.out.println("reloaded");
             isInit = false;
             startActivity(new Intent(this, ParentalAccess.class));
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
             Log.d("Restart", "asdasda");
         }
@@ -86,6 +88,7 @@ public class ParentalAccess extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ParentalAccess.this, AddCategory.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -93,6 +96,7 @@ public class ParentalAccess extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ParentalAccess.this, Settings.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -171,6 +175,7 @@ public class ParentalAccess extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(ParentalAccess.this, Settings.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

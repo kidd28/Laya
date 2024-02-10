@@ -100,6 +100,7 @@ public class AddAudio extends AppCompatActivity {
         setContentView(R.layout.activity_add_audio);
 
 
+
         uploadAudio = findViewById(R.id.uploadAudio);
         uploadImage = findViewById(R.id.uploadImage);
         upload = findViewById(R.id.upload);
@@ -115,7 +116,9 @@ public class AddAudio extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
                 i.putExtra("Category", category);
+
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -345,7 +348,9 @@ public class AddAudio extends AppCompatActivity {
                         //  Toast.makeText(AddAudio.this, "Success",Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
                         i.putExtra("Category", category);
+
                         startActivity(i);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -628,6 +633,7 @@ public class AddAudio extends AppCompatActivity {
         Intent i = new Intent(AddAudio.this, ParentAccessAudio.class);
         i.putExtra("Category", category);
         startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

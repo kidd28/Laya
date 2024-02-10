@@ -42,6 +42,7 @@ public class ParentAccessAudio extends AppCompatActivity {
         setContentView(R.layout.activity_parent_access_audio);
     //    FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
         tv = findViewById(R.id.categoryName);
@@ -68,6 +69,7 @@ public class ParentAccessAudio extends AppCompatActivity {
                 Intent i = new Intent(ParentAccessAudio.this, AddAudio.class);
                 i.putExtra("Category", category);
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +77,9 @@ public class ParentAccessAudio extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ParentAccessAudio.this, ParentalAccess.class);
                 i.putExtra("Category", category);
+
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -153,6 +157,7 @@ public class ParentAccessAudio extends AppCompatActivity {
         Intent i = new Intent(ParentAccessAudio.this, ParentalAccess.class);
         i.putExtra("Category", category);
         startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

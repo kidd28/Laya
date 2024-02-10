@@ -38,6 +38,8 @@ public class ForgotPin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_pin);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         questionSpinner = findViewById(R.id.question);
         submit = findViewById(R.id.save);
         answer = findViewById(R.id.answer);
@@ -70,7 +72,9 @@ public class ForgotPin extends AppCompatActivity {
                         if(snap.child("Answer").getValue().toString().equals(answer)){
                             Intent i = new Intent(ForgotPin.this, SetupPasscode.class);
                             i.putExtra("Type", "Reset");
+
                             startActivity(i);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             finish();
                         }else{
                             Toast.makeText(ForgotPin.this, "Incorrect answer, please try again!", Toast.LENGTH_SHORT).show();
@@ -107,5 +111,14 @@ public class ForgotPin extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        startActivity(new Intent(ForgotPin.this, Passcode.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 }

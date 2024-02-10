@@ -42,6 +42,8 @@ public class SetupPasscode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_passcode);
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
@@ -109,12 +111,15 @@ public class SetupPasscode extends AppCompatActivity {
                     Intent intent = new Intent(SetupPasscode.this, SecurityQuestions.class);
                         intent.putExtra("set", "new");
                         intent.putExtra("language", language);
-                    startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     SetupPasscode.this.finish();
                     }
                     if(type.equals("Update")|| type.equals("Reset")){
                         Intent intent = new Intent(SetupPasscode.this, Dashboard.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         SetupPasscode.this.finish();
                     }
                 }
@@ -158,6 +163,7 @@ public class SetupPasscode extends AppCompatActivity {
             revokeAccess();
         }else if(type.equals("Update")){
             startActivity(new Intent(SetupPasscode.this, Dashboard.class));
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
         }
     }

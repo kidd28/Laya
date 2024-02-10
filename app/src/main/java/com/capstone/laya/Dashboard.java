@@ -120,6 +120,7 @@ public class Dashboard extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbar.setLogo(null);//!!!
@@ -203,7 +204,10 @@ public class Dashboard extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Dashboard.this, Passcode.class);
                 i.putExtra("Intent", "Settings");
+
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
             }
         });
 
@@ -325,17 +329,20 @@ public class Dashboard extends AppCompatActivity {
             mp.reset();
             mp.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
             mp.prepare();
+
+            if(audioModels.size()>=2){
             count++;
             mp2.reset();
             mp2.setDataSource(Environment.getExternalStorageDirectory().getPath() + "/AudioAAC/" + audioModels.get(count).getId() + ".mp3");
             mp2.prepare();
             mp.setNextMediaPlayer(mp2);
+            }
             mp.start();
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    mp.stop();
                     count++;
+                    mp.stop();
                     if (mp2 != null) {
                         mp2.start();
                         if (count < audioModels.size()) {
@@ -394,16 +401,8 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 
     public void additem(String id, String category) {
-        System.out.println(id);
-        System.out.println(category);
-
         if(language.equals("Filipino")){
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedAudio").child("Filipino");
             reference.keepSynced(true);
@@ -418,7 +417,6 @@ public class Dashboard extends AppCompatActivity {
                         }
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
@@ -604,5 +602,18 @@ public class Dashboard extends AppCompatActivity {
         });
  }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        new AlertDialog.Builder(this)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).create().show();
+    }
 }

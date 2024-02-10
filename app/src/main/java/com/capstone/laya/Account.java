@@ -28,6 +28,8 @@ public class Account extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+
+
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         pfp = findViewById(R.id.pfp);
@@ -57,6 +59,7 @@ public class Account extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(Account.this, Settings.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

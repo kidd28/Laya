@@ -81,7 +81,9 @@ public class ParentCategoryAdapter extends RecyclerView.Adapter<ParentCategoryAd
                 Intent i = new Intent(context, ParentAccessAudio.class);
                 i.putExtra("Category", category);
                 context.startActivity(i);
+                ((Activity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 ((Activity) context).finish();
+
             }
         });
 

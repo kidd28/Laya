@@ -20,3 +20,5 @@ dependencyResolutionManagement {
 rootProject.name = "Laya"
 include ':app'
 include ':audiorecorder'
+include ':ffmpeg-recorder'
+include ':core'

@@ -92,6 +92,7 @@ public class EditAudio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_audio);
 
+
         uploadAudio = findViewById(R.id.uploadAudio);
         uploadImage = findViewById(R.id.uploadImage);
         name = findViewById(R.id.Name);
@@ -119,6 +120,7 @@ public class EditAudio extends AppCompatActivity {
                 Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
                 i.putExtra("Category", Category);
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -259,7 +261,9 @@ public class EditAudio extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Intent i = new Intent(EditAudio.this, ParentAccessAudio.class);
                         i.putExtra("Category", Category);
+
                         startActivity(i);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                     }
                 });
@@ -305,7 +309,7 @@ public class EditAudio extends AppCompatActivity {
             case REQUEST_AUDIO_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Audio permission granted", Toast.LENGTH_SHORT).show();
-
+                    showRecorder();
                 } else {
                     Toast.makeText(this, "Audio permission denied", Toast.LENGTH_SHORT).show();
                 }
@@ -502,7 +506,7 @@ public class EditAudio extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
-                        EditText YouEditTextValue = dialogview.findViewById(R.id.etCategory);
+                        EditText YouEditTextValue = dialogview.findViewById(R.id.etTTS);
                         //OR
                         String TTS = YouEditTextValue.getText().toString();
                         textToSpeechHelper.startConvert(TTS, TTS+".mp3","Play",language1);

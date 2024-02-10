@@ -65,6 +65,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+
         parentalacess = findViewById(R.id.parentalaccess);
         backwhite = findViewById(R.id.backwhite);
         name = findViewById(R.id.name);
@@ -84,6 +85,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.this, ParentalAccess.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -114,6 +116,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.this, Account.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -123,6 +126,7 @@ public class Settings extends AppCompatActivity {
                 Intent i = new Intent(Settings.this, Passcode.class);
                 i.putExtra("Intent","Passcode");
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -172,6 +176,7 @@ public class Settings extends AppCompatActivity {
                                 revokeAccess();
                                 FirebaseAuth.getInstance().signOut();
                                 startActivity(new Intent(Settings.this, MainActivity.class));
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             }
                         }).create().show();
@@ -191,6 +196,9 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(Settings.this, "Language changed successfully ",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Settings.this, Dashboard.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
             }
         });
 
@@ -224,6 +232,7 @@ public class Settings extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(Settings.this, Dashboard.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

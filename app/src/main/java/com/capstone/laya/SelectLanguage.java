@@ -30,6 +30,7 @@ public class SelectLanguage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_language);
 
+
         fil = findViewById(R.id.filipino);
         eng = findViewById(R.id.english);
 
@@ -48,6 +49,7 @@ public class SelectLanguage extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Intent i = new Intent(SelectLanguage.this, Dashboard.class);
                         startActivity(i);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -67,6 +69,7 @@ public class SelectLanguage extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Intent i = new Intent(SelectLanguage.this, Dashboard.class);
                         startActivity(i);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

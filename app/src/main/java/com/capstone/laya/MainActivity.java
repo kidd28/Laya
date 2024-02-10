@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //initialize variables
         Login = findViewById(R.id.login);
         subtext = findViewById(R.id.subtext);
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("name", account.getDisplayName().substring(0, 1).toUpperCase() + account.getDisplayName().substring(1).toLowerCase());//send name value in next activity
                                 intent.putExtra("language", language);
                                 startActivity(intent);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             } else {
                                 //if existing user
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtra("Welcome", "Welcome!");
                                 i.putExtra("Language", language);
                                 startActivity(i);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 finish();
                             }
                         } else {
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             user.reload();
             progressDialog.cancel();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
         } else {
         }
@@ -177,7 +182,5 @@ public class MainActivity extends AppCompatActivity {
                         System.exit(0);
                     }
                 }).create().show();
-
-
     }
 }

@@ -27,11 +27,13 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding2);
 
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         introPref = new IntroPref(this);
         if (!introPref.isFirstTimeLaunch()){
 
             startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
 
         }

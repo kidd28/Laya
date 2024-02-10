@@ -66,6 +66,7 @@ public class AddCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         upload = findViewById(R.id.upload);
         uploadImg = findViewById(R.id.uploadImage);
@@ -117,7 +118,9 @@ public class AddCategory extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(AddCategory.this, ParentalAccess.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -223,7 +226,9 @@ public class AddCategory extends AppCompatActivity {
                                         reference.child(categoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
+
                                                 startActivity(new Intent(AddCategory.this, ParentalAccess.class));
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                                 finish();
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
@@ -263,7 +268,9 @@ public class AddCategory extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         startActivity(new Intent(AddCategory.this, ParentalAccess.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

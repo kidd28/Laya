@@ -58,6 +58,7 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
         email = findViewById(R.id.EditText_email);
          name = findViewById(R.id.EditText_name);
         dob = findViewById(R.id.EditText_dob);
@@ -147,6 +148,7 @@ public class Register extends AppCompatActivity implements DatePickerDialog.OnDa
                             Intent intent = new Intent(Register.this, SetupPasscode.class);
                             intent.putExtra("Type", "New");
                             startActivity(intent);
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             Register.this.finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {

@@ -89,6 +89,8 @@ public class CategoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_category, container, false);
         // Inflate the layout for this fragment
         rv = v.findViewById(R.id.rv);
+
+
         categoriesModels = new ArrayList<>();
         int mNoOfColumns = Utility.calculateNoOfColumns(getContext(), 200);
         sv = v.findViewById(R.id.sv);
@@ -252,6 +254,7 @@ public class CategoryFragment extends Fragment {
                 });
             }
         } else {
+            if(language != null){
             if (language.equals("English")) {
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProvidedCategory").child("English");
                 reference.keepSynced(true);
@@ -290,7 +293,7 @@ public class CategoryFragment extends Fragment {
                     }
                 });
             }
-        }
+        }}
 
 
     }
@@ -368,5 +371,11 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        categoriesModels.clear();
     }
 }

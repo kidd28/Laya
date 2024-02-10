@@ -55,6 +55,7 @@ public class SecurityQuestions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_security_questions);
 
+
         q1 = findViewById(R.id.question1);
         q2 = findViewById(R.id.question2);
         q3 = findViewById(R.id.question3);
@@ -139,6 +140,7 @@ public class SecurityQuestions extends AppCompatActivity {
                                         public void onSuccess(Void unused) {
                                             Intent intent = new Intent(SecurityQuestions.this, Dashboard.class);
                                             startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                             SecurityQuestions.this.finish();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {

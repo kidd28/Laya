@@ -39,6 +39,8 @@ public class Passcode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passcode);
 
+
+
         pinView1 = findViewById(R.id.firstPinView);
         error = findViewById(R.id.error);
         confirm = findViewById(R.id.next);
@@ -85,6 +87,9 @@ public class Passcode extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Passcode.this, ForgotPin.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+
             }
         });
 
@@ -114,14 +119,25 @@ public class Passcode extends AppCompatActivity {
         } else {
             if (nextintent.equals("Settings")) {
                 startActivity(new Intent(Passcode.this, Settings.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             } else if (nextintent.equals("Passcode")) {
                 Intent i = new Intent(Passcode.this, SetupPasscode.class);
                 i.putExtra("Type", "Update");
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Passcode.this, Dashboard.class);
+        startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 }

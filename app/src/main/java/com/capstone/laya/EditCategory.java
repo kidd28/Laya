@@ -70,6 +70,8 @@ public class EditCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_category);
+
+
         upload = findViewById(R.id.upload);
         uploadImg = findViewById(R.id.uploadImage);
         categoryName = findViewById(R.id.EditText);
@@ -124,7 +126,9 @@ public class EditCategory extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(EditCategory.this, ParentalAccess.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -178,7 +182,9 @@ public class EditCategory extends AppCompatActivity {
         reference.child(CategoryName).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+
                 startActivity(new Intent(EditCategory.this, ParentalAccess.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -216,7 +222,9 @@ public class EditCategory extends AppCompatActivity {
                                         ref1.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
+
                                                 startActivity(new Intent(EditCategory.this, ParentalAccess.class));
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                                 finish();
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
