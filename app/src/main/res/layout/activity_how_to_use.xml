@@ -4,104 +4,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HowToUse"
-    android:background="@color/fontblue">
+    android:background="@color/fontblue"
+    tools:context=".HowToUse">
 
     <LinearLayout
-        android:id="@+id/linearback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/_23sdp">
-
-        <ImageView
-            android:id="@+id/backwhite"
-            android:layout_width="@dimen/_11sdp"
-            android:layout_height="@dimen/_11sdp"
-            android:src="@drawable/backwhite"
-            android:layout_marginLeft="@dimen/_18sdp"
-            android:layout_marginTop="@dimen/_18sdp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/linearback"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="How to use"
-            android:fontFamily="@font/handosoftbold"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_23sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_marginStart="@dimen/_26sdp"
-            />
+            android:layout_marginBottom="@dimen/_23sdp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/backwhite"
+                android:layout_width="@dimen/_11sdp"
+                android:layout_height="@dimen/_11sdp"
+                android:layout_marginLeft="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_18sdp"
+                android:src="@drawable/backwhite" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/handosoftbold"
+                android:text="How to use"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_23sdp" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_100sdp"
+                android:background="@drawable/topleft_topright_radius"
+                android:paddingLeft="@dimen/_30sdp"
+                android:paddingTop="@dimen/_40sdp"
+                android:paddingRight="@dimen/_30sdp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/img1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_120sdp"
+                            android:src="@drawable/img1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_9sdp"
+                            android:fontFamily="@font/handosoftbold"
+                            android:text="All the words you clicked will be stored in here. The speaker icon job is to play all the words that is stored in the box. While the trash icon servers as the deleter."
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/figure2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="@dimen/_20sdp">
+
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:id="@+id/img2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_400sdp"
+                            android:src="@drawable/img2" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_7sdp"
+                            android:fontFamily="@font/handosoftbold"
+                            android:text="You can navigate the categories and words here in dashboard."
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </ScrollView>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_100sdp"
-        android:background="@drawable/topleft_topright_radius"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/linearback"
-        android:paddingLeft="@dimen/_30sdp"
-        android:paddingRight="@dimen/_30sdp"
-        android:paddingTop="@dimen/_40sdp"
-        android:layout_centerHorizontal="true">
-
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <!--        <RelativeLayout-->
-            <!--            android:id="@+id/figure1"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content">-->
-
-            <!--            <ImageView-->
-            <!--                android:id="@+id/img1"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="@dimen/_120sdp"-->
-            <!--                android:src="@drawable/img1"/>-->
-            <!--            <TextView-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_below="@id/img1"-->
-            <!--                android:layout_marginTop="@dimen/_9sdp"-->
-            <!--                android:fontFamily="@font/handosoftbold"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="@dimen/_13sdp"-->
-            <!--                android:text="All the words you clicked will be stored in here. The speaker icon job is to play all the words that is stored in the box. While the trash icon servers as the deleter."/>-->
-
-            <!--        </RelativeLayout>-->
-
-            <!--        <RelativeLayout-->
-            <!--            android:layout_marginTop="@dimen/_30sdp"-->
-            <!--            android:id="@+id/figure2"-->
-            <!--            android:layout_below="@id/figure1"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content">-->
-
-            <!--            <ImageView-->
-            <!--                android:id="@+id/img2"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:src="@drawable/img2"/>-->
-            <!--            <TextView-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_below="@id/img2"-->
-            <!--                android:layout_marginTop="@dimen/_7sdp"-->
-            <!--                android:fontFamily="@font/handosoftbold"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="@dimen/_13sdp"-->
-            <!--                android:text="You can navigate the categories and words here in dashboard."/>-->
-
-            <!--        </RelativeLayout>-->
-        </ScrollView>
-    </RelativeLayout>
 
 </RelativeLayout>

@@ -311,17 +311,6 @@
         </LinearLayout>
 
 
-        <!--        <Button-->
-        <!--            android:id="@+id/logout"-->
-        <!--            android:layout_width="@dimen/_100sdp"-->
-        <!--            android:layout_height="@dimen/_40sdp"-->
-        <!--            android:layout_alignParentBottom="true"-->
-        <!--            android:layout_centerInParent="true"-->
-        <!--            android:fontFamily="@font/handosoftbold"-->
-        <!--            android:textAllCaps="false"-->
-        <!--            android:textSize="@dimen/_14sdp"-->
-        <!--            android:padding="@dimen/_5sdp"-->
-        <!--            android:text="Sign out" />-->
 
     </RelativeLayout>
 

@@ -116,23 +116,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:layout_marginEnd="@dimen/_10sdp"-->
-<!--                    android:src="@drawable/signout"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/logout"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:fontFamily="@font/handosoftbold"-->
-<!--                    android:gravity="center_vertical"-->
-<!--                    android:text="Sign out"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="@dimen/_14sdp" />-->
-
             </LinearLayout>
 
 

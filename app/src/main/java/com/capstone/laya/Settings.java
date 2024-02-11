@@ -204,6 +204,7 @@ public class Settings extends AppCompatActivity {
         loadUserprofile();
     }
 
+
     private void setLanguage(String language) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         HashMap<String, Object> hashMap = new HashMap<>();
