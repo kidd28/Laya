@@ -3,6 +3,7 @@ package com.capstone.laya;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -18,5 +19,15 @@ ImageView img2;
         img2= findViewById(R.id.img2);
 
         Glide.with(this).load(getDrawable(R.drawable.img2)).into(img2);
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(HowToUse.this, Settings.class));
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 }
