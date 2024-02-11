@@ -204,7 +204,6 @@ public class Dashboard extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Dashboard.this, Passcode.class);
                 i.putExtra("Intent", "Settings");
-
                 startActivity(i);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();

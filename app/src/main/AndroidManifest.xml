@@ -40,51 +40,51 @@
         <activity
             android:name=".ForgotPin"
             android:exported="false"
-            android:noHistory="true" />
+          />
         <activity
             android:name=".SecurityQuestions"
             android:exported="false"
-            android:noHistory="true" />
+           />
         <activity
             android:name=".OnboardingActivity"
             android:exported="false"
-            android:noHistory="true" />
+           />
         <activity
             android:name=".SetupPasscode"
             android:exported="false"
-            android:noHistory="true" />
+          />
         <activity
             android:name=".Passcode"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".Account"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".EditCategory"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".EditAudio"
             android:exported="false"
-            android:noHistory="true" />
+          />
         <activity
             android:name=".AddAudio"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".AddCategory"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".ParentAccessAudio"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".SplashScreen"
             android:exported="true"
-            android:noHistory="true">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,27 +95,27 @@
             android:name=".Dashboard"
             android:configChanges="orientation|screenSize"
             android:exported="false"
-            android:noHistory="true" />
+          />
         <activity
             android:name=".SelectLanguage"
             android:exported="false"
-            android:noHistory="true" />
+           />
         <activity
             android:name=".Register"
             android:exported="false"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".Settings"
             android:exported="true"
-            android:noHistory="true" />
+           />
         <activity
             android:name=".ParentalAccess"
             android:exported="true"
-            android:noHistory="true" />
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:noHistory="true" />
+            />
     </application>
 
 </manifest>
