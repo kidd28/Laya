@@ -120,6 +120,14 @@ public class Settings extends AppCompatActivity {
                 finish();
             }
         });
+        how.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this, HowToUse.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+            }
+        });
         passcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
