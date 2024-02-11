@@ -6,11 +6,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -29,53 +29,62 @@
         android:theme="@style/Theme.Laya"
         tools:targetApi="31">
         <activity
-            android:noHistory="true"
+            android:name=".About"
+            android:exported="false" />
+        <activity
+            android:name=".Feedback"
+            android:exported="false" />
+        <activity
+            android:name=".HowToUse"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPin"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".SecurityQuestions"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".OnboardingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".SetupPasscode"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".Passcode"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".Account"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".EditCategory"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".EditAudio"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".AddAudio"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".AddCategory"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".ParentAccessAudio"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".SplashScreen"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -83,30 +92,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:noHistory="true"
             android:name=".Dashboard"
             android:configChanges="orientation|screenSize"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".SelectLanguage"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".Register"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".Settings"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".ParentalAccess"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true" />
         <activity
-            android:noHistory="true"
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true" />
     </application>
 
 </manifest>

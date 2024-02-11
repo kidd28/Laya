@@ -184,6 +184,14 @@ public class Settings extends AppCompatActivity {
         });
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this, Feedback.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+            }
+        });
 
         loadUserprofile();
     }
