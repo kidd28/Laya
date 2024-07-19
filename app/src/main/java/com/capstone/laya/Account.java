@@ -108,10 +108,12 @@ public class Account extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String Name = ""+snapshot.child("Name").getValue();
-                String Email = ""+snapshot.child("Email").getValue();
+
+                String Name = ""+ snapshot.child("Name").getValue();
+                String Email = ""+ snapshot.child("Email").getValue();
                 name.setText(Name);
                 email.setText(Email);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
